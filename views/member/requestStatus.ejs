@@ -173,7 +173,7 @@
                                 </thead>
                                 <tbody>
                                     <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                                      <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                                      <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
                                   <tr class="text-center">
                                     <td><%= user.fullname %></td>
                                     <td>
@@ -209,7 +209,7 @@
                           </div>
                           <!-- modal start -->
                           <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                            <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                            <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
                           <div class="modal fade" id="modal<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">

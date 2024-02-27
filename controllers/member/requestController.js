@@ -11,6 +11,7 @@ module.exports.index = async (req, res) => {
                 res.render('member/createReq', {
                     site_tile: SITE_TITLE,
                     title: 'Request',
+                    currentUrl: req.originalUrl,
                 })
             } else {
                 return res.render('404')

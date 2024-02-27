@@ -24,7 +24,8 @@ module.exports.index = async (req, res) => {
                     site_title: SITE_TITLE,
                     title: 'Home',
                     userFormRequests:userData,
-                    messages: req.flash()
+                    messages: req.flash(),
+                    currentUrl: req.originalUrl,
                 });
             } else {
                 return res.render('404')

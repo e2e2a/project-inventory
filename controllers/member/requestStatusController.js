@@ -23,6 +23,7 @@ module.exports.index = async (req, res) => {
                     site_title: SITE_TITLE,
                     title: 'Home',
                     userFormRequests:userData,
+                    currentUrl: req.originalUrl,
                 });
             } else {
                 return res.render('404')
