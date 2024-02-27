@@ -1,0 +1,156 @@
+<%- include('../partials/header/header.ejs') %>
+
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../partials/_navbar.html -->
+      <%- include('../partials/navbar/navbar.ejs') %>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:../partials/_settings-panel.html -->
+          <div class="theme-setting-wrapper">
+            <div id="settings-trigger"><i class="ti-settings"></i></div>
+            <div id="theme-settings" class="settings-panel">
+              <i class="settings-close ti-close"></i>
+              <p class="settings-heading">SIDEBAR SKINS</p>
+              <div class="sidebar-bg-options selected" id="sidebar-light-theme">
+                <div class="img-ss rounded-circle bg-light border mr-3"></div>Light
+              </div>
+              <div class="sidebar-bg-options" id="sidebar-dark-theme">
+                <div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark
+              </div>
+              <p class="settings-heading mt-2">HEADER SKINS</p>
+              <div class="color-tiles mx-0 px-4">
+                <div class="tiles success"></div>
+                <div class="tiles warning"></div>
+                <div class="tiles danger"></div>
+                <div class="tiles info"></div>
+                <div class="tiles dark"></div>
+                <div class="tiles default"></div>
+              </div>
+            </div>
+          </div>
+          <%- /* include('../partials/sidebar/right-sidebar.ejs'); */ %>
+          <!-- partial -->
+          <!-- partial:../partials/_sidebar.html -->
+          <%- include('../partials/sidebar/sidebar.ejs') %>
+            <!-- partial -->
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <%- include('../partials/welcome/welcome.ejs') %>
+                  <%- include('../partials/chart/chart.ejs') %>
+                    <div class="row">
+                      <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                <h3 class="font-weight-bold">Request Forms</h3>
+                              </div>
+                            </div>
+                            <div class="row align-items-center justify-content-center">
+                              <div class="col-xl-12 ">
+                                <div class="row justify-content-between">
+                                  <div class="col-8 col-md-6 col-xl-5 mt-2">
+                                    <div class="input-group justify-content-center align-items-center">
+                                      <h5 class="mr-1">Search:</h5>
+                                      <input type="date" class="form-control d-flex" name="name"
+                                        id="search-request-date" placeholder="Search Date" aria-label="search"
+                                        aria-describedby="search">
+                                    </div>
+                                  </div>
+                                  <div class="col-4 col-md-6 col-xl-3 mt-2">
+                                    <div class="justify-content-end align-items-center d-flex text-center ">
+                                      <a href="/request" class="btn btn-success btn-rounded btn-fw d-flex align-items-center"><i
+                                          class="mdi mdi-plus text-center"></i>Add</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="table-responsive text mt-5">
+                              <table class="table table-bordered expandable-table no-footer">
+                                <thead>
+                                  <tr class="text-center">
+                                    <th>Fullname</th>
+                                    <th>Purpose</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status === 'pending') {%>
+                                  <tr class="text-center">
+                                    <td><%= reqForm.fullname %></td>
+                                    <td>
+                                      <button type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#modal<%= reqForm._id %>">
+                                        View Purpose
+                                      </button>
+                                    </td>
+                                    <td><%= reqForm.dateCreated %></td>
+                                    <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
+                                    <td>
+                                      <form action="/deleteRequest" method="post">
+                                        <div class="btn-group">
+                                          <a href="#" class="btn btn-info p-2" title="Edit">
+                                            <i class="mdi mdi-square-edit-outline"></i>
+                                          </a>
+                                          <input type="hidden" name="reqId" id="reqId" value="<%= reqForm._id %>">
+                                          <button type="submit" class="btn btn-danger p-2"
+                                            title="Delete">
+                                            <i class="mdi mdi-delete"></i>
+                                          </button>
+                                        </div>
+                                      </form>
+                                    </td>
+                                  </tr>
+                                  <% } %>
+                                    <% }); %>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <!-- modal start -->
+                          <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                            <% if(reqForm.status === 'pending') {%>
+                          <div class="modal fade" id="modal<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
+                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticBackdropLabel">Purpose</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body text-justify">
+                                  <%= reqForm.purpose %>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                          <% }); %>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+              <!-- content-wrapper ends -->
+
+
+              <!-- partial:../partials/_footer.html -->
+              <%- include('../partials/copyright/copyright.ejs'); %>
+              <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <%- include('./../partials/footer/footer.ejs') %>
