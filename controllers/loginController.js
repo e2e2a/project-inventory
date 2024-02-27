@@ -63,7 +63,6 @@ module.exports.submit = async (req, res) => {
                         return res.redirect('/login');
                     }
                     req.session.login = user.id;
-                    console.log(user._id)
                     res.redirect('/');
                 });
             }

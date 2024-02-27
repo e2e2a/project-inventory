@@ -4,6 +4,7 @@ const memberController = require('../controllers/member/memberController');
 const memberRequestController = require('../controllers/member/requestController');
 const memberRequestStatusController = require('../controllers/member/requestStatusController');
 const adminIndexController = require('../controllers/admin/indexController');
+const adminRequestStatusController = require('../controllers/admin/requestStatusController');
 module.exports = function(app) {
     app.get('/login', userLoginController.index);
     app.post('/login', userLoginController.submit);
@@ -17,7 +18,8 @@ module.exports = function(app) {
     app.post('/request', memberRequestController.submit)
     //admin
     app.get('/admin', adminIndexController.index)
-
+    app.post('/admin/approved', adminIndexController.approved)
+    app.get('/users/requests', adminRequestStatusController.index);
 
     //ex
     app.get('/table', (req, res) => {

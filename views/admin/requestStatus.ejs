@@ -113,7 +113,7 @@
                         </div>
                       </div>
                       <!-- This is for status declined && completed -->
-                      <% if(userFormRequests && userFormRequests.filter(reqForm => ['completed', 'declined'].includes(reqForm.status))) { %>
+                      <% if(userFormRequests && userFormRequests.some(reqForm => ['completed', 'declined'].includes(reqForm.status))) { %>
                       <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                           <div class="card-body">
@@ -225,5 +225,4 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
-
     <%- include('./../partials/footer/footer.ejs') %>

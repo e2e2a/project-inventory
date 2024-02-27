@@ -7,8 +7,8 @@ module.exports.index = async (req, res) => {
         const userId = req.session.login;
         const user = await User.findById(userId);
         if (user) {
-            const userFormRequests = await formRequest.find({userId: userId});
-            const userDataPromises = userFormRequests
+            const allUserFormRequests = await formRequest.find();
+            const userDataPromises = allUserFormRequests
                 .map(async (reqForm) => {
                     return {
                         reqForm: reqForm,
@@ -17,12 +17,12 @@ module.exports.index = async (req, res) => {
                 });
 
             // Resolve all promises
-            const userData = await Promise.all(userDataPromises);
-            if (user.role === 'member') {
-                res.render('member/requestStatus', {
+            const allUserData = await Promise.all(userDataPromises);
+            if (user.role === 'admin') {
+                res.render('admin/requestStatus', {
                     site_title: SITE_TITLE,
                     title: 'Requests',
-                    userFormRequests:userData,
+                    userFormRequests:allUserData,
                     currentUrl: req.originalUrl,
                     user: user,
                 });

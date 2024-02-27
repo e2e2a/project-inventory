@@ -37,7 +37,7 @@
                                   </div>
                                   <div class="col-4 col-md-6 col-xl-3 mt-2">
                                     <div class="justify-content-end align-items-center d-flex text-center ">
-                                      <a href="/request" class="btn btn-success btn-rounded btn-fw d-flex align-items-center"><i
+                                      <a href="/request" class="btn btn-primary btn-rounded d-flex align-items-center"><i
                                           class="mdi mdi-plus text-center"></i>Add</a>
                                     </div>
                                   </div>
@@ -72,12 +72,12 @@
                                       <form action="" method="post">
                                         <div class="btn-group" role="group">
                                           <button type="button" class="btn btn-info p-2" data-toggle="modal"
-                                          data-target="#modalapproved<%= reqForm._id %>" title="Approved" style="border-radius: 3px !important;">
+                                          data-target="#modalapproved<%= reqForm._id %>" title="Approved" >
                                             <i class="mdi mdi-check-circle-outline"></i>
                                           </button>
                                           <input type="hidden" name="reqId" id="reqId" value="<%= reqForm._id %>">
-                                          <button type="submit" class="btn btn-danger p-2"
-                                            title="Declined" style="border-radius: 3px !important;">
+                                          <button type="submit" class="btn btn-danger btn-fw p-2"
+                                            title="Declined" >
                                             <i class="mdi mdi-close-circle-outline"></i>
                                           </button>
                                         </div>
@@ -93,22 +93,15 @@
                           <!-- modal start -->
                           <% allFormRequests.forEach(({ reqForm, user })=> { %>
                             <% if(reqForm.status === 'pending') {%>
-                          <div class="modal fade" id="modal<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
+                          <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
                               <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="staticBackdropLabel">Purpose</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
+                                <h3 class="modal-title text-center p-3" id="staticBackdropLabel">Purpose</h3> <hr style="margin-top:5px; margin-bottom:2px; height:1px; width:100%; border-top:1px solid gray;"/>
                                 <div class="modal-body text-justify">
-                                  <%= reqForm.purpose %>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;<%= reqForm.purpose %>
                                 </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
+                                
                               </div>
                             </div>
                           </div>
@@ -122,20 +115,17 @@
                             <div class="modal-dialog modal-dialog-scrollable">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title" id="staticBackdropLabel">Approved</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                                  <h4 class="modal-title" id="staticBackdropLabel">Approved</h4>
                                 </div>
+                                <form action="/admin/approved" method="post">
                                 <div class="modal-body text-justify">
-                                  <form action="" method="post">
                                     <div class="form-group">
                                       <input type="hidden" name="reqFormId" value="<%= reqForm._id %>">
-                                      <label for="dropdownMenuButtonRemark">Remark</label>
-                                      <div class="dropdown" id="remarkDropdown">
-                                        <input type="text" class="form-control dropdown-toggle" id="dropdownMenuButtonRemark" name="remark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Select an option" autocomplete="off">
+                                      <label for="dropdownMenuButtonRemark" class="font-weight-bold required">Remark</label>
+                                      <div class="dropdown" id="dropdown<%= reqForm._id %>">
+                                        <input type="text" class="form-control dropdown-toggle" id="dropdownMenuButtonRemark" name="remark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Select an option" autocomplete="off" required>
                                         <div class="dropdown-menu">
-                                          <div class="dropdown-item">Option 1</div>
+                                          <div class="dropdown-item">Approved, Please see the admin.</div>
                                           <div class="dropdown-item">Option 2</div>
                                           <div class="dropdown-item">Option 3</div>
                                         </div>
@@ -144,11 +134,12 @@
                                     <br/>
                                     <br/>
                                     <br/>
-                                  </form>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary text-white" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-info">Approve</button>
+                                  </div>
+                                </form>
                               </div>
                             </div>
                           </div>
@@ -172,22 +163,28 @@
     <!-- container-scroller -->
     <script>
       document.addEventListener("DOMContentLoaded", function() {
-      const remarkDropdown = document.getElementById('remarkDropdown');
-      const dropdownSelectRemark = remarkDropdown.querySelector('.dropdown-toggle');
-      const dropdownMenuRemark = remarkDropdown.querySelector('.dropdown-menu');
-  
-      dropdownMenuRemark.addEventListener('click', function(event) {
-        if (event.target.classList.contains('dropdown-item')) {
-          dropdownSelectRemark.value = event.target.textContent.trim();
-        }
+        const modals = document.querySelectorAll('[id^="modalapproved"]');
+      
+        modals.forEach(function(modal) {
+          const reqFormId = modal.id.replace("modalapproved", "");
+      
+          const dropdown = modal.querySelector('#dropdown' + reqFormId);
+          const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+          const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+      
+          dropdownMenu.addEventListener('click', function(event) {
+            if (event.target.classList.contains('dropdown-item')) {
+              dropdownToggle.value = event.target.textContent.trim();
+            }
+          });
+      
+          document.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropdown-toggle')) {
+              dropdownMenu.classList.remove('show');
+            }
+          });
+        });
       });
-  
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function(event) {
-        if (!event.target.matches('#dropdownMenuButtonRemark')) {
-          dropdownMenuRemark.classList.remove('show');
-        }
-      });
-    });
-    </script>
+      </script>
+      
     <%- include('./../partials/footer/footer.ejs') %>

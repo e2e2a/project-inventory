@@ -9,7 +9,6 @@ module.exports.index = async (req, res) => {
         if (user) {
             const userFormRequests = await formRequest.find({userId: userId});
             const userDataPromises = userFormRequests
-                
                 .map(async (reqForm) => {
                     return {
                         reqForm: reqForm,
@@ -26,6 +25,7 @@ module.exports.index = async (req, res) => {
                     userFormRequests:userData,
                     messages: req.flash(),
                     currentUrl: req.originalUrl,
+                    user:user,
                 });
             } else {
                 return res.render('404')

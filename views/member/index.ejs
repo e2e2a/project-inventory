@@ -37,7 +37,7 @@
                                   </div>
                                   <div class="col-4 col-md-6 col-xl-3 mt-2">
                                     <div class="justify-content-end align-items-center d-flex text-center ">
-                                      <a href="/request" class="btn btn-success btn-rounded btn-fw d-flex align-items-center"><i
+                                      <a href="/request" class="btn btn-primary btn-rounded d-flex align-items-center"><i
                                           class="mdi mdi-plus text-center"></i>Add</a>
                                     </div>
                                   </div>
@@ -92,21 +92,13 @@
                           <!-- modal start -->
                           <% userFormRequests.forEach(({ reqForm, user })=> { %>
                             <% if(reqForm.status === 'pending') {%>
-                          <div class="modal fade" id="modal<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
+                          <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
                               <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="staticBackdropLabel">Purpose</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
+                                <h3 class="modal-title text-center p-3" id="staticBackdropLabel">Purpose</h3> <hr style="margin-top:5px; margin-bottom:2px; height:1px; width:100%; border-top:1px solid gray;"/>
                                 <div class="modal-body text-justify">
                                   <%= reqForm.purpose %>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                               </div>
                             </div>

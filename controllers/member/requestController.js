@@ -12,6 +12,7 @@ module.exports.index = async (req, res) => {
                     site_tile: SITE_TITLE,
                     title: 'Request',
                     currentUrl: req.originalUrl,
+                    user:user,
                 })
             } else {
                 return res.render('404')
@@ -41,14 +42,19 @@ module.exports.submit = async (req, res) => {
             });
             const savedRequest = await formData.save();
             if (savedRequest) {
-                return res.status(200).render('member/createReqSuccess');
+                return res.status(200).render('member/createReqSuccess', {
+                    currentUrl: req.originalUrl,
+                    title: 'Success',
+                    site_title:SITE_TITLE,
+                    user:user,
+                });
             } else {
                 req.flash('error', 'Something went wrong!');
                 return res.status(500).render('500');
             }
 
         } else {
-            return res.redirect('/login')
+            return res.redirect('/login');
         }
     } catch (error) {
         console.log('error', error);
