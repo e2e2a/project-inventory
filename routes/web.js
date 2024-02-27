@@ -3,6 +3,7 @@ const userLoginController = require('../controllers/loginController');
 const memberController = require('../controllers/member/memberController');
 const memberRequestController = require('../controllers/member/requestController');
 const memberRequestStatusController = require('../controllers/member/requestStatusController');
+const adminIndexController = require('../controllers/admin/indexController');
 module.exports = function(app) {
     app.get('/login', userLoginController.index);
     app.post('/login', userLoginController.submit);
@@ -14,7 +15,8 @@ module.exports = function(app) {
     app.get('/requests', memberRequestStatusController.index)
     app.get('/request', memberRequestController.index);
     app.post('/request', memberRequestController.submit)
-
+    //admin
+    app.get('/admin', adminIndexController.index)
 
 
     //ex
@@ -31,7 +33,7 @@ module.exports = function(app) {
         res.render('ex/mdi')
     })
     app.get('/ex', (req, res) => {
-        res.render('example')
+        res.render('ex/example')
     })
     app.get('/form', (req, res) => {
         res.render('ex/form')

@@ -13,16 +13,17 @@
             <!-- partial -->
             <div class="main-panel">
               <div class="content-wrapper">
+                <%- include('../partials/welcome/welcome.ejs') %>
+                  <%- include('../partials/chart/chart.ejs') %>
                     <div class="row">
                       <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                           <div class="card-body">
                             <div class="row">
                               <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
-                                <h3 class="font-weight-bold">Requests Status</h3>
+                                <h3 class="font-weight-bold">Requesting Forms</h3>
                               </div>
                             </div>
-                            <% if(userFormRequests && userFormRequests.some(reqForm => ['approved', 'process'].includes(reqForm.status))) { %>
                             <div class="row align-items-center justify-content-center">
                               <div class="col-xl-12 ">
                                 <div class="row justify-content-between">
@@ -32,6 +33,12 @@
                                       <input type="date" class="form-control d-flex" name="name"
                                         id="search-request-date" placeholder="Search Date" aria-label="search"
                                         aria-describedby="search">
+                                    </div>
+                                  </div>
+                                  <div class="col-4 col-md-6 col-xl-3 mt-2">
+                                    <div class="justify-content-end align-items-center d-flex text-center ">
+                                      <a href="/request" class="btn btn-success btn-rounded btn-fw d-flex align-items-center"><i
+                                          class="mdi mdi-plus text-center"></i>Add</a>
                                     </div>
                                   </div>
                                 </div>
@@ -44,16 +51,15 @@
                                     <th>Fullname</th>
                                     <th>Purpose</th>
                                     <th>Created</th>
-                                    <th>Remark</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                                      <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                                    <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status === 'pending') {%>
                                   <tr class="text-center">
-                                    <td><%= user.fullname %></td>
+                                    <td><%= reqForm.fullname %></td>
                                     <td>
                                       <button type="button" class="btn btn-info" data-toggle="modal"
                                         data-target="#modal<%= reqForm._id %>">
@@ -61,17 +67,18 @@
                                       </button>
                                     </td>
                                     <td><%= reqForm.dateCreated %></td>
-                                    <td><%= reqForm.remark %></td>
                                     <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
                                     <td>
                                       <form action="" method="post">
-                                        <div class="btn-group">
-                                          <a href="#" class="btn btn-info p-2" title="Edit">
-                                            <i class="mdi mdi-square-edit-outline"></i>
-                                          </a>
+                                        <div class="btn-group" role="group">
+                                          <button type="button" class="btn btn-info p-2" data-toggle="modal"
+                                          data-target="#modalapproved<%= reqForm._id %>" title="Approved" style="border-radius: 3px !important;">
+                                            <i class="mdi mdi-check-circle-outline"></i>
+                                          </button>
+                                          <input type="hidden" name="reqId" id="reqId" value="<%= reqForm._id %>">
                                           <button type="submit" class="btn btn-danger p-2"
-                                            title="Delete">
-                                            <i class="mdi mdi-delete"></i>
+                                            title="Declined" style="border-radius: 3px !important;">
+                                            <i class="mdi mdi-close-circle-outline"></i>
                                           </button>
                                         </div>
                                       </form>
@@ -82,13 +89,10 @@
                                 </tbody>
                               </table>
                             </div>
-                            <% }else{ %>
-                              <p>No Request has been approved.</p>
-                              <% } %>
                           </div>
                           <!-- modal start -->
-                          <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                            <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                          <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                            <% if(reqForm.status === 'pending') {%>
                           <div class="modal fade" id="modal<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
@@ -110,95 +114,37 @@
                           </div>
                           <% } %>
                           <% }); %>
-                        </div>
-                      </div>
-                      <!-- This is for status declined && completed -->
-                      <% if(userFormRequests && userFormRequests.some(reqForm => ['completed', 'declined'].includes(reqForm.status))) { %>
-                      <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
-                                <h3 class="font-weight-bold">Requests Status</h3>
-                              </div>
-                            </div>
-                            <div class="row align-items-center justify-content-center">
-                              <div class="col-xl-12 ">
-                                <div class="row justify-content-between">
-                                  <div class="col-8 col-md-6 col-xl-5 mt-2">
-                                    <div class="input-group justify-content-center align-items-center">
-                                      <h5 class="mr-1">Search:</h5>
-                                      <input type="date" class="form-control d-flex" name="name"
-                                        id="search-request-date" placeholder="Search Date" aria-label="search"
-                                        aria-describedby="search">
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="table-responsive text mt-5">
-                              <table class="table table-bordered expandable-table no-footer">
-                                <thead>
-                                  <tr class="text-center">
-                                    <th>Fullname</th>
-                                    <th>Purpose</th>
-                                    <th>Created</th>
-                                    <th>Remark</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                                      <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
-                                  <tr class="text-center">
-                                    <td><%= user.fullname %></td>
-                                    <td>
-                                      <button type="button" class="btn btn-info" data-toggle="modal"
-                                        data-target="#modal<%= reqForm._id %>">
-                                        View Purpose
-                                      </button>
-                                    </td>
-                                    <td><%= reqForm.dateCreated %></td>
-                                    <td><%= reqForm.remark %></td>
-                                    <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
-                                    <td>
-                                      <form action="" method="post">
-                                        <div class="btn-group">
-                                          <a href="#" class="btn btn-info p-2" title="Edit">
-                                            <i class="mdi mdi-square-edit-outline"></i>
-                                          </a>
-                                          <button type="submit" class="btn btn-danger p-2"
-                                            title="Delete">
-                                            <i class="mdi mdi-delete"></i>
-                                          </button>
-                                        </div>
-                                      </form>
-                                    </td>
-                                  </tr>
-                                  <% } %>
-                                    <% }); %>
-                                </tbody>
-                              </table>
-                            </div>
-                            
-                              
-                          </div>
-                          <!-- modal start -->
-                          <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                            <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
-                          <div class="modal fade" id="modal<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
+                          
+                          <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                            <% if(reqForm.status === 'pending') {%>
+                          <div class="modal fade" id="modalapproved<%= reqForm._id %>" data-backdrop="static" data-keyboard="false"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title" id="staticBackdropLabel">Purpose</h5>
+                                  <h5 class="modal-title" id="staticBackdropLabel">Approved</h5>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                   </button>
                                 </div>
                                 <div class="modal-body text-justify">
-                                  <%= reqForm.purpose %>
+                                  <form action="" method="post">
+                                    <div class="form-group">
+                                      <input type="hidden" name="reqFormId" value="<%= reqForm._id %>">
+                                      <label for="dropdownMenuButtonRemark">Remark</label>
+                                      <div class="dropdown" id="remarkDropdown">
+                                        <input type="text" class="form-control dropdown-toggle" id="dropdownMenuButtonRemark" name="remark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Select an option" autocomplete="off">
+                                        <div class="dropdown-menu">
+                                          <div class="dropdown-item">Option 1</div>
+                                          <div class="dropdown-item">Option 2</div>
+                                          <div class="dropdown-item">Option 3</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                  </form>
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -210,7 +156,6 @@
                           <% }); %>
                         </div>
                       </div>
-                      <% } %>
                     </div>
               </div>
               <!-- content-wrapper ends -->
@@ -225,5 +170,24 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
-
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+      const remarkDropdown = document.getElementById('remarkDropdown');
+      const dropdownSelectRemark = remarkDropdown.querySelector('.dropdown-toggle');
+      const dropdownMenuRemark = remarkDropdown.querySelector('.dropdown-menu');
+  
+      dropdownMenuRemark.addEventListener('click', function(event) {
+        if (event.target.classList.contains('dropdown-item')) {
+          dropdownSelectRemark.value = event.target.textContent.trim();
+        }
+      });
+  
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!event.target.matches('#dropdownMenuButtonRemark')) {
+          dropdownMenuRemark.classList.remove('show');
+        }
+      });
+    });
+    </script>
     <%- include('./../partials/footer/footer.ejs') %>
