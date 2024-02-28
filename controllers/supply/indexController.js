@@ -30,8 +30,8 @@ module.exports.index = async (req, res) => {
 
             // Resolve all promises
             const userData = await Promise.all(userDataPromises);
-            if (user.role === 'admin') {
-                res.render('admin/index', {
+            if (user.role === 'supply') {
+                res.render('supply/index', {
                     site_title: SITE_TITLE,
                     title: 'Home',
                     allFormRequests: formData,
@@ -41,14 +41,14 @@ module.exports.index = async (req, res) => {
                     userFormRequests: userData,
                 });
             } else {
-                return res.render('404')
+                return res.render('404');
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500');
     }
 }
 

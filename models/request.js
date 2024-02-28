@@ -16,7 +16,13 @@ var schema = mongoose.Schema({
     adminApproved: {
         type: String,
     },
+    adminDeclined: {
+        type: String,
+    },
     supplyApproved: {
+        type: String,
+    },
+    supplyDeclined: {
         type: String,
     },
     remark: {

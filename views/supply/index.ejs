@@ -52,13 +52,14 @@
                                       <th>Fullname</th>
                                       <th>Purpose</th>
                                       <th>Created</th>
+                                      <th>Remark</th>
                                       <th>Status</th>
                                       <th>Action</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <% allFormRequests.forEach(({ reqForm, user })=> { %>
-                                      <% if(reqForm.status==='pending' ) {%>
+                                      <% if(reqForm.status==='approved' ) {%>
                                         <tr class="text-center">
                                           <td>
                                             <%= user.fullname %>
@@ -71,6 +72,9 @@
                                           </td>
                                           <td>
                                             <%= reqForm.dateCreated %>
+                                          </td>
+                                          <td>
+                                            <%= reqForm.remark %>
                                           </td>
                                           <td><label class="badge badge-<%= reqForm.status %> text-capitalize">
                                               <%= reqForm.status %>

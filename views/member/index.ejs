@@ -30,9 +30,9 @@
                                   <div class="col-8 col-md-6 col-xl-5 mt-2">
                                     <div class="input-group justify-content-center align-items-center">
                                       <h5 class="mr-1">Search:</h5>
-                                      <input type="date" class="form-control d-flex" name="name"
-                                        id="search-request-date" placeholder="Search Date" aria-label="search"
-                                        aria-describedby="search">
+                                      <input type="date" class="form-control d-flex" name="searchByDate"
+                                              id="searchByDate" placeholder="Search Date" aria-label="search"
+                                              aria-describedby="search">
                                     </div>
                                   </div>
                                   <div class="col-4 col-md-6 col-xl-3 mt-2">
@@ -121,5 +121,26 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+<script>
+  //for searchByDate input
+  document.addEventListener('DOMContentLoaded', function () {
+        const searchByDate = document.getElementById('searchByDate');
+        const requestformRows = document.querySelectorAll('tbody tr');
 
+        searchByDate.addEventListener('input', function () {
+          const searchQuery = this.value.trim().toLowerCase();
+
+          requestformRows.forEach(row => {
+            const dateCell = row.querySelector('td:nth-child(3)');
+            const dateText = dateCell.textContent.trim(); // Extract text content
+
+            if (dateText.includes(searchQuery)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+      });
+</script>
     <%- include('./../partials/footer/footer.ejs') %>

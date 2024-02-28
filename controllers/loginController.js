@@ -31,7 +31,7 @@ module.exports.submit = async (req, res) => {
                     req.session.login = user.id;
                     res.redirect('/admin');
                 });
-            }else if (user.role === 'creator'){
+            }else if (user.role === 'supply'){
                 if (!user) {
                     req.flash('error', 'Invalid Email.');
                     return res.status(400).redirect('/login');
@@ -46,7 +46,7 @@ module.exports.submit = async (req, res) => {
                         return res.status(400).redirect('/login');
                     }
                     req.session.login = user.id;
-                    res.redirect('/vehicles');
+                    res.redirect('/supply');
                 });
             } else if(user.role === 'member'){
                 if (!user) {

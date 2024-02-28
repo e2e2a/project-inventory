@@ -4,8 +4,9 @@ const startServer = async () => {
   try {
       const usersData = [
         //creation
-        { fullname: 'Reymond Godoy', email: 'member@gmail.com', contact: '1234567890', address: '123 Main St', role:'member', assign: 'Mayor', password: 'password123'},
-        { fullname: 'Marz Velasco', email: 'admin@gmail.com', contact: '1234567890', address: '123 Main St', role:'admin', assign: 'Mayor', password: 'password123'}
+        { fullname: 'Reymond Godoy', email: 'member@gmail.com', contact: '1234567890', role:'member', assign: 'Mayor', password: 'password123'},
+        { fullname: 'Marz Velasco', email: 'admin@gmail.com', contact: '1234567890', role:'admin', assign: 'Mayor', password: 'password123'},
+        { fullname: 'Supply Supply', email: 'supply@gmail.com', contact: '1234567890', role:'supply', assign: 'Mayor', password: 'password123'}
       ];
 
       const createdUsers = [];
