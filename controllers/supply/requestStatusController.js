@@ -18,8 +18,8 @@ module.exports.index = async (req, res) => {
 
             // Resolve all promises
             const allUserData = await Promise.all(userDataPromises);
-            if (user.role === 'admin') {
-                res.render('admin/requestStatus', {
+            if (user.role === 'supply') {
+                res.render('supply/supplyRequestStatus', {
                     site_title: SITE_TITLE,
                     title: 'Requests',
                     userFormRequests:allUserData,
@@ -46,15 +46,13 @@ module.exports.cancel = async (req,res) => {
             const reqFormId = req.body.reqFormId;
             const data = {
                 remark: '',
-                status: 'pending',
-                // unfinish
-                adminApproved: '',
+                status: 'approved',
+                supplyApproved: '',
             }
             formRequest.findByIdAndUpdate(reqFormId, data, { new: true })
                 .then((remark) => {
                     req.flash('message', 'Request has been cancelled!');
-                    return res.redirect('/admin');
-
+                    return res.redirect('/users/requests/process');
                 })
                 .catch((error) => {
                     console.error('Error updating data:', error);

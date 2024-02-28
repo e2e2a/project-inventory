@@ -6,6 +6,7 @@ const memberRequestStatusController = require('../controllers/member/requestStat
 const adminIndexController = require('../controllers/admin/indexController');
 const adminRequestStatusController = require('../controllers/admin/requestStatusController');
 const supplyIndexController = require('../controllers/supply/indexController');
+const supplyRequestStatusController = require('../controllers/supply/requestStatusController');
 module.exports = function(app) {
     app.get('/login', userLoginController.index);
     app.post('/login', userLoginController.submit);
@@ -29,8 +30,9 @@ module.exports = function(app) {
     app.get('/supply', supplyIndexController.index);
     app.post('/supply/approved', supplyIndexController.approved);
     app.post('/supply/declined', supplyIndexController.declined);
-    // app.get('/users/requests', adminRequestStatusController.index);
-    // app.post('/supply/cancel', adminRequestStatusController.cancel);
+    app.post('/supply/completed', supplyIndexController.completed);
+    app.get('/users/requests/process', supplyRequestStatusController.index);
+    app.post('/supply/cancel', supplyRequestStatusController.cancel);
     //ex
     app.get('/table', (req, res) => {
         res.render('ex/table')

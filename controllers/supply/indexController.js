@@ -116,3 +116,32 @@ module.exports.declined = async (req,res) => {
         return res.status(500).render('500');
     }
 }
+
+module.exports.completed = async (req, res) => {
+    try {
+        const userId = req.session.login;
+        const user = await User.findById(userId);
+        if (user) {
+            const reqFormId = req.body.reqFormId;
+            const remark = {
+                remark: req.body.remark,
+                status: 'completed',
+            }
+            formRequest.findByIdAndUpdate(reqFormId, remark, { new: true })
+                .then((remark) => {
+                    req.flash('message', 'Request has been Completed!');
+                    return res.redirect('/users/requests/process');
+                })
+                .catch((error) => {
+                    console.error('Error updating data:', error);
+                    req.flash('message', 'Update failed!');
+                    return res.status(500).render('500');
+                });
+        } else {
+            return res.redirect('/login');
+        }
+    } catch (error) {
+        console.log('err:', error);
+        return res.status(500).render('500')
+    }
+}

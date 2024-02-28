@@ -32,14 +32,14 @@ function activeClass(link) {
         </a>
       </li>
       <% }else if(user.role === 'supply') {%>
-      <li class="nav-item <%= activeClass('/admin') %>">
+      <li class="nav-item <%= activeClass('/supply') %>">
         <a class="nav-link" href="/supply">
           <i class="mdi mdi-home menu-icon"></i>
           <span class="menu-title">Home</span>
         </a>
       </li>
-      <li class="nav-item <%= activeClass('/users/requests') %>">
-        <a class="nav-link" href="/users/requests">
+      <li class="nav-item <%= activeClass('/users/requests/process') %>">
+        <a class="nav-link" href="/users/requests/process">
           <i class="mdi mdi-file-multiple menu-icon"></i>
           <span class="menu-title">Requests</span>
         </a>

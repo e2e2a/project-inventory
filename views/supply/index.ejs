@@ -58,45 +58,39 @@
                                     </tr>
                                   </thead>
                                   <tbody>
+                                    <% let approvedRequestsFound = false; %>
                                     <% allFormRequests.forEach(({ reqForm, user })=> { %>
-                                      <% if(reqForm.status==='approved' ) {%>
+                                      <% if(reqForm.status === 'approved' ) { %>
+                                        <% approvedRequestsFound = true; %>
                                         <tr class="text-center">
+                                          <td><%= user.fullname %></td>
                                           <td>
-                                            <%= user.fullname %>
-                                          </td>
-                                          <td>
-                                            <button type="button" class="btn btn-info" data-toggle="modal"
-                                              data-target="#modal<%= reqForm._id %>">
+                                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal<%= reqForm._id %>">
                                               View Purpose
                                             </button>
                                           </td>
-                                          <td>
-                                            <%= reqForm.dateCreated %>
-                                          </td>
-                                          <td>
-                                            <%= reqForm.remark %>
-                                          </td>
-                                          <td><label class="badge badge-<%= reqForm.status %> text-capitalize">
-                                              <%= reqForm.status %>
-                                            </label></td>
+                                          <td><%= reqForm.dateCreated %></td>
+                                          <td><%= reqForm.remark %></td>
+                                          <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
                                           <td>
                                             <form action="" method="post">
                                               <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-info p-2" data-toggle="modal"
-                                                  data-target="#modalapproved<%= reqForm._id %>" title="Approved">
+                                                <button type="button" class="btn btn-info p-2" data-toggle="modal" data-target="#modalapproved<%= reqForm._id %>" title="Approved">
                                                   <i class="mdi mdi-check-circle-outline"></i>
                                                 </button>
                                                 <input type="hidden" name="reqId" id="reqId" value="<%= reqForm._id %>">
-                                                <button type="button" class="btn btn-danger btn-fw p-2" data-toggle="modal"
-                                                data-target="#modaldeclined<%= reqForm._id %>" title="Declined">
+                                                <button type="button" class="btn btn-danger btn-fw p-2" data-toggle="modal" data-target="#modaldeclined<%= reqForm._id %>" title="Declined">
                                                   <i class="mdi mdi-close-circle-outline"></i>
                                                 </button>
                                               </div>
                                             </form>
                                           </td>
                                         </tr>
-                                        <% } %>
-                                          <% }); %>
+                                      <% } %>
+                                    <% }); %>
+                                    <% if (!approvedRequestsFound) { %>
+                                        <p class="mb-3 text-center">No requests have been approved.</p>
+                                    <% } %>
                                   </tbody>
                                 </table>
                               </div>

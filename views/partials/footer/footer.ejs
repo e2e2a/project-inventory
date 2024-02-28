@@ -1,8 +1,8 @@
+<% if(messages.message) {%>
   <script>
-    <% if(messages.message) {%>
-    alert('<%= messages.message %>')
-  <% } %>
+    window.alert('<%= messages.message %>')
   </script>
+<% } %>
   
   <!-- plugins:js -->
   <script src="/public/vendors/js/vendor.bundle.base.js"></script>
