@@ -7,16 +7,12 @@ module.exports.index = async (req, res) => {
         const userId = req.session.login;
         const user = await User.findById(userId);
         if (user) {
-            if (user.role === 'member') {
                 res.render('member/createReq', {
                     site_tile: SITE_TITLE,
                     title: 'Request',
                     currentUrl: req.originalUrl,
                     user:user,
                 })
-            } else {
-                return res.render('404')
-            }
         } else {
             return res.redirect('/login')
         }
@@ -35,7 +31,6 @@ module.exports.submit = async (req, res) => {
         if (user) {
             const formData = new formRequest({
                 userId: user._id,
-                fullname: req.body.fullname,
                 purpose: req.body.purpose,
                 dateCreated: dateCreated,
                 status: 'pending',

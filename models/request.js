@@ -6,9 +6,6 @@ var schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', required: true
     },
-    fullname: {
-        type: String
-    },
     purpose: {
         type: String,
     },

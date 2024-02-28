@@ -16,7 +16,15 @@
                     <div class="card-body">
                     <h4 class="card-title text-center rounded text-white bg-success p-3">Request Success</h4>
                     <form class="forms-sample mt-1 text-center">
+                      <% if(user.role === 'member') { %>
                         <a href="/" class="btn btn-light font-weight-bold">Home</a>
+                      <% }else if(user.role === 'admin') { %>
+                        <a href="/admin" class="btn btn-light font-weight-bold">Home</a>
+                      <% }else if(user.role === 'supply') { %>
+                        <a href="/supply" class="btn btn-light font-weight-bold">Home</a>
+                      <% }else if(user.role === 'superAdmin'){ %>
+                        <a href="/" class="btn btn-light font-weight-bold">Home</a>
+                      <% } %>
                     </form>
                     </div>
                 </div>
