@@ -15,13 +15,22 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Request Now!</h4>
-                  <form class="mt-5" action="/request" method="post">
+                  <form class="mt-5" action="/request/<%= formToEdit._id %>/doEdit" method="post">
                     <div class="form-group">
                       <label for="purpose" class="required">Purpose</label>
-                      <textarea class="form-control" id="purpose" name="purpose" rows="4" required autocomplete="off"></textarea>
+                      <textarea class="form-control" id="purpose" name="purpose" rows="4" required autocomplete="off"><%= formToEdit.purpose %></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <!-- Unfinish -->
+                    <% if(user.role === 'member') {%>
+                    <a href="/" class="btn btn-light">Cancel</a>
+                    <%} else if(user.role === 'admin') {%>
+                    <a href="/admin" class="btn btn-light">Cancel</a>
+                    <%} else if(user.role === 'supply') {%>
+                    <a href="/supply" class="btn btn-light">Cancel</a>
+                    <%} else if(user.role === 'superAdmin') {%>
                     <a href="" class="btn btn-light">Cancel</a>
+                    <% } %>
                   </form>
                 </div>
               </div>

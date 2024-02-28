@@ -12,10 +12,12 @@ module.exports = function(app) {
     //member
     app.get('/', memberController.index);
     app.post('/deleteRequest', memberController.requestDelete)
-    //create template
     app.get('/requests', memberRequestStatusController.index)
+    //create request
     app.get('/request', memberRequestController.index);
-    app.post('/request', memberRequestController.submit)
+    app.post('/request', memberRequestController.submit);
+    app.get('/request/:id', memberRequestController.edit);
+    app.post('/request/:id/doEdit', memberRequestController.doEdit);
     //admin
     app.get('/admin', adminIndexController.index)
     app.post('/admin/approved', adminIndexController.approved)

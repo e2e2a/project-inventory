@@ -120,7 +120,7 @@
                         </div>
                       </div>
                       <!-- This is for status declined && completed -->
-                      <% if(userFormRequests && userFormRequests.some(reqForm => ['completed', 'declined'].includes(reqForm.status))) { %>
+                      <% if(userFormRequests && userFormRequests.filter(reqForm => ['completed', 'declined'].includes(reqForm.status)).length > 0) { %>
                       <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                           <div class="card-body">

@@ -18,6 +18,18 @@ module.exports.index = async (req, res) => {
 
             // Resolve all promises
             const formData = await Promise.all(AllDataRequestForms);
+            // This is for the user.login making a request
+            const userFormRequests = await formRequest.find({userId: userId});
+            const userDataPromises = userFormRequests
+                .map(async (reqForm) => {
+                    return {
+                        reqForm: reqForm,
+                        user: await User.findById(reqForm.userId)
+                    };
+                });
+
+            // Resolve all promises
+            const userData = await Promise.all(userDataPromises);
             if (user.role === 'admin') {
                 res.render('admin/index', {
                     site_title: SITE_TITLE,
@@ -26,6 +38,7 @@ module.exports.index = async (req, res) => {
                     messages: req.flash(),
                     currentUrl: req.originalUrl,
                     user:user,
+                    userFormRequests:userData,
                 });
             } else {
                 return res.render('404')
