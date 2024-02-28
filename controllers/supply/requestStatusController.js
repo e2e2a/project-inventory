@@ -44,8 +44,9 @@ module.exports.cancel = async (req,res) => {
         const user = await User.findById(userId);
         if (user) {
             const reqFormId = req.body.reqFormId;
+            const dataForm = await formRequest.findById(reqFormId)
             const data = {
-                remark: '',
+                remark: dataForm.remarkRG,
                 status: 'approved',
                 supplyApproved: '',
             }

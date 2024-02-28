@@ -62,6 +62,7 @@ module.exports.approved = async (req, res) => {
             const reqFormId = req.body.reqFormId;
             const remark = {
                 remark: req.body.remark,
+                remarkRG: req.body.remark,
                 status: 'approved',
                 adminApproved: dateCreated,
             }

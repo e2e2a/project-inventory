@@ -28,6 +28,9 @@ var schema = mongoose.Schema({
     remark: {
         type: String,
     },
+    remarkRG: {
+        type: String,
+    },
     status: {
         type: String,
     },
