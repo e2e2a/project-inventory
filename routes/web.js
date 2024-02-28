@@ -26,8 +26,11 @@ module.exports = function(app) {
     app.get('/users/requests', adminRequestStatusController.index);
     app.post('/admin/cancel', adminRequestStatusController.cancel);
     //supply
-    app.get('/supply', supplyIndexController.index)
-
+    app.get('/supply', supplyIndexController.index);
+    app.post('/supply/approved', supplyIndexController.approved);
+    app.post('/supply/declined', supplyIndexController.declined);
+    // app.get('/users/requests', adminRequestStatusController.index);
+    // app.post('/supply/cancel', adminRequestStatusController.cancel);
     //ex
     app.get('/table', (req, res) => {
         res.render('ex/table')

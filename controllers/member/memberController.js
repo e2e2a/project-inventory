@@ -41,7 +41,14 @@ module.exports.index = async (req, res) => {
 
 module.exports.requestDelete = async (req,res) => {
     const reqId = req.body.reqId;
+    const user = await User.findById(req.session.login)
     await formRequest.findByIdAndDelete(reqId)
     req.flash('message', 'Request Form has been deleted!');
-    return res.redirect('/')
+    if(user.role === 'admin'){
+        return res.redirect('/admin');
+    }else if(user.role === 'member'){
+        return res.redirect('/');
+    }else if(user.role === 'supply'){
+        return res.redirect('/supply');
+    }
 }

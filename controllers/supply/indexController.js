@@ -62,13 +62,13 @@ module.exports.approved = async (req, res) => {
             const reqFormId = req.body.reqFormId;
             const remark = {
                 remark: req.body.remark,
-                status: 'approved',
-                adminApproved: dateCreated,
+                status: 'process',
+                supplyApproved: dateCreated,
             }
             formRequest.findByIdAndUpdate(reqFormId, remark, { new: true })
                 .then((remark) => {
                     req.flash('message', 'Approved Success!');
-                    return res.redirect('/admin');
+                    return res.redirect('/supply');
 
                 })
                 .catch((error) => {
@@ -77,7 +77,7 @@ module.exports.approved = async (req, res) => {
                     return res.status(500).render('500');
                 });
         } else {
-            return res.redirect('/login')
+            return res.redirect('/login');
         }
     } catch (error) {
         console.log('err:', error);
@@ -96,12 +96,12 @@ module.exports.declined = async (req,res) => {
             const data = {
                 remark: req.body.remark,
                 status: 'declined',
-                adminDeclined: dateCreated,
+                supplyDeclined: dateCreated,
             }
             formRequest.findByIdAndUpdate(reqFormId, data, { new: true })
                 .then((remark) => {
                     req.flash('message', 'Request has been declined!');
-                    return res.redirect('/admin');
+                    return res.redirect('/supply');
                 })
                 .catch((error) => {
                     console.error('Error updating data:', error);
@@ -109,7 +109,7 @@ module.exports.declined = async (req,res) => {
                     return res.status(500).render('500');
                 });
         } else {
-            return res.redirect('/login')
+            return res.redirect('/login');
         }
     } catch (error) {
         console.log('err:', error);
