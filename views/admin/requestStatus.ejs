@@ -46,14 +46,16 @@
                                     <th>Created</th>
                                     <th>Remark</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Admin Approved</th>
+                                    <th>Supply Approved</th>
+                                    <th>Actions</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                     <% userFormRequests.forEach(({ reqForm, user })=> { %>
                                       <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
                                   <tr class="text-center">
-                                    <td><%= user.fullname %></td>
+                                    <td><%= reqForm.fullname %></td>
                                     <td>
                                       <button type="button" class="btn btn-info" data-toggle="modal"
                                         data-target="#modal<%= reqForm._id %>">
@@ -63,19 +65,24 @@
                                     <td><%= reqForm.dateCreated %></td>
                                     <td><%= reqForm.remark %></td>
                                     <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
+                                    <td><%= reqForm.adminApproved %></td>
+                                    <%if(reqForm.supplyApproved) {%>
+                                      <td><%= reqForm.supplyApproved %></td>
+                                    <% }else{ %>
+                                      <td>Wating for Supply Approval</td>
+                                    <% } %>
+                                    <% if(reqForm.status === 'approved') {%>
                                     <td>
                                       <form action="" method="post">
-                                        <div class="btn-group">
-                                          <a href="#" class="btn btn-info p-2" title="Edit">
-                                            <i class="mdi mdi-square-edit-outline"></i>
-                                          </a>
                                           <button type="submit" class="btn btn-danger p-2"
                                             title="Delete">
                                             <i class="mdi mdi-delete"></i>
                                           </button>
-                                        </div>
-                                      </form>
+                                        </form>
                                     </td>
+                                      <% } else{ %>
+                                        <td class="text-success text-center">On Process</td>
+                                        <% } %>
                                   </tr>
                                   <% } %>
                                     <% }); %>
@@ -145,14 +152,15 @@
                                     <th>Created</th>
                                     <th>Remark</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Action Date</th>
+                                    <th>Actions</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                     <% userFormRequests.forEach(({ reqForm, user })=> { %>
                                       <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
                                   <tr class="text-center">
-                                    <td><%= user.fullname %></td>
+                                    <td><%= reqForm.fullname %></td>
                                     <td>
                                       <button type="button" class="btn btn-info" data-toggle="modal"
                                         data-target="#modal<%= reqForm._id %>">
@@ -162,6 +170,7 @@
                                     <td><%= reqForm.dateCreated %></td>
                                     <td><%= reqForm.remark %></td>
                                     <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
+                                    <td><%= reqForm.adminApproved %></td>
                                     <td>
                                       <form action="" method="post">
                                         <div class="btn-group">

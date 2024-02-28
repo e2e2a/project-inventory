@@ -43,11 +43,14 @@ module.exports.approved = async(req,res)=> {
     
     const userId = req.session.login;
     const user = await User.findById(userId);
+    const currentDate = new Date();
+    const dateCreated = currentDate.toISOString().split('T')[0];
     if(user){
         const reqFormId = req.body.reqFormId;
         const remark = {
             remark: req.body.remark,
-            status: 'approved'
+            status: 'approved',
+            adminApproved:dateCreated,
         }
         formRequest.findByIdAndUpdate(reqFormId, remark, { new: true })
         .then((remark) => {
