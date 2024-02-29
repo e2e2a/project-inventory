@@ -146,7 +146,6 @@
                                     <th>Status</th>
                                     <th>Admin</th>
                                     <th>Supply</th>
-                                    <th>Actions</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -177,15 +176,6 @@
                                     <% } else{ %>
                                         <td class="text-center">N/A</td>
                                     <% } %>
-                                    <td>
-                                      <form action="/deleteRequest" method="post">
-                                          <input type="hidden" name="reqId" value="<%= reqForm._id %>">
-                                          <button type="submit" class="btn btn-danger p-2"
-                                            title="Delete">
-                                            <i class="mdi mdi-delete"></i>
-                                          </button>
-                                      </form>
-                                    </td>
                                   </tr>
                                   <% } %>
                                     <% }); %>
