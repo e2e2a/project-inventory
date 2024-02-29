@@ -7,7 +7,7 @@ module.exports.index = async (req, res) => {
         const userId = req.session.login;
         const user = await User.findById(userId);
         if (user) {
-            const userFormRequests = await formRequest.find({userId: userId});
+            const userFormRequests = await formRequest.find({ userId: userId });
             const userDataPromises = userFormRequests
                 .map(async (reqForm) => {
                     return {
@@ -22,10 +22,10 @@ module.exports.index = async (req, res) => {
                 res.render('member/index', {
                     site_title: SITE_TITLE,
                     title: 'Home',
-                    userFormRequests:userData,
+                    userFormRequests: userData,
                     messages: req.flash(),
                     currentUrl: req.originalUrl,
-                    user:user,
+                    user: user,
                 });
             } else {
                 return res.render('404')
@@ -39,16 +39,21 @@ module.exports.index = async (req, res) => {
     }
 }
 
-module.exports.requestDelete = async (req,res) => {
-    const reqId = req.body.reqId;
-    const user = await User.findById(req.session.login)
-    await formRequest.findByIdAndDelete(reqId)
-    req.flash('message', 'Request Form has been deleted!');
-    if(user.role === 'admin'){
-        return res.redirect('/admin');
-    }else if(user.role === 'member'){
-        return res.redirect('/');
-    }else if(user.role === 'supply'){
-        return res.redirect('/supply');
+module.exports.requestDelete = async (req, res) => {
+    try {
+        const reqId = req.body.reqId;
+        const user = await User.findById(req.session.login)
+        await formRequest.findByIdAndDelete(reqId)
+        req.flash('message', 'Request Form has been deleted!');
+        if (user.role === 'admin') {
+            return res.redirect('/admin');
+        } else if (user.role === 'member') {
+            return res.redirect('/');
+        } else if (user.role === 'supply') {
+            return res.redirect('/supply');
+        }
+    } catch (error) {
+        console.log('error', error);
+        return res.status(500).render('500');
     }
 }

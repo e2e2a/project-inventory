@@ -7,6 +7,7 @@ const adminIndexController = require('../controllers/admin/indexController');
 const adminRequestStatusController = require('../controllers/admin/requestStatusController');
 const supplyIndexController = require('../controllers/supply/indexController');
 const supplyRequestStatusController = require('../controllers/supply/requestStatusController');
+const superAdminIndexController = require('../controllers/superAdmin/indexController');
 module.exports = function(app) {
     app.get('/login', userLoginController.index);
     app.post('/login', userLoginController.submit);
@@ -33,6 +34,13 @@ module.exports = function(app) {
     app.post('/supply/completed', supplyIndexController.completed);
     app.get('/users/requests/process', supplyRequestStatusController.index);
     app.post('/supply/cancel', supplyRequestStatusController.cancel);
+    //super admin
+    app.get('/users', superAdminIndexController.index)
+    app.get('/user/create', superAdminIndexController.create);
+    app.post('/user/create', superAdminIndexController.doCreate);
+    app.post('/user/delete', superAdminIndexController.userDelete);
+    app.get('/user/edit/:id', superAdminIndexController.edit);
+    app.post('/user/edit/:id/doEdit', superAdminIndexController.doEdit);
     //ex
     app.get('/table', (req, res) => {
         res.render('ex/table')
@@ -51,6 +59,9 @@ module.exports = function(app) {
     })
     app.get('/form', (req, res) => {
         res.render('ex/form')
+    })
+    app.get('/chart', (req, res) => {
+        res.render('superAdmin/chartjs')
     })
     
     
