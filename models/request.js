@@ -12,7 +12,6 @@ var schema = mongoose.Schema({
     dateCreated: {
         type: String,
     },
-    // this is date
     adminApproved: {
         type: String,
     },

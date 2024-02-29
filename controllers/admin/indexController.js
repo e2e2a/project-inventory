@@ -1,7 +1,7 @@
 const SITE_TITLE = 'TESDA';
 const User = require('../../models/user');
 const formRequest = require('../../models/request')
-
+const remarkBackUp = require('../../models/remark');
 module.exports.index = async (req, res) => {
     try {
         const userId = req.session.login;
@@ -60,9 +60,13 @@ module.exports.approved = async (req, res) => {
         const dateCreated = currentDate.toISOString().split('T')[0];
         if (user) {
             const reqFormId = req.body.reqFormId;
+            const remarkbackup = new remarkBackUp({
+                reqFormId: reqFormId,
+                remark: req.body.remark,
+            })
+            await remarkbackup.save();
             const remark = {
                 remark: req.body.remark,
-                remarkRG: req.body.remark,
                 status: 'approved',
                 adminApproved: dateCreated,
             }

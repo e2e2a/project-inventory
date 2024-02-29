@@ -1,7 +1,7 @@
 const SITE_TITLE = 'TESDA';
 const User = require('../../models/user');
 const formRequest = require('../../models/request');
-
+const remarkBackUp = require('../../models/remark');
 module.exports.index = async (req, res) => {
     try {
         const userId = req.session.login;
@@ -44,9 +44,9 @@ module.exports.cancel = async (req,res) => {
         const user = await User.findById(userId);
         if (user) {
             const reqFormId = req.body.reqFormId;
-            const dataForm = await formRequest.findById(reqFormId)
+            const remarkbackup = await remarkBackUp.findOne({reqFormId:reqFormId})
             const data = {
-                remark: dataForm.remarkRG,
+                remark: remarkbackup.remark,
                 status: 'approved',
                 supplyApproved: '',
             }
