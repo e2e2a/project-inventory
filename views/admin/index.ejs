@@ -46,7 +46,7 @@
                                 </div>
                               </div>
                               <div class="table-responsive text mt-5">
-                                <table class="table table-bordered expandable-table no-footer">
+                                <table id="searchFullnameTable" class="table table-bordered expandable-table no-footer">
                                   <thead>
                                     <tr class="text-center">
                                       <th>Fullname</th>
@@ -235,7 +235,7 @@
                                     </div>
                                   </div>
                                   <div class="table-responsive text mt-5">
-                                    <table class="table table-bordered expandable-table no-footer">
+                                    <table id="searchByDateTable" class="table table-bordered expandable-table no-footer">
                                       <thead>
                                         <tr class="text-center">
                                           <th>Fullname</th>
@@ -308,28 +308,30 @@
     <script>
       //for searchByDate input
       document.addEventListener('DOMContentLoaded', function () {
-        const searchByDate = document.getElementById('searchByDate');
-        const requestformRows = document.querySelectorAll('tbody tr');
+      const searchByDate = document.getElementById('searchByDate');
+      const requestformRows = document.querySelectorAll('#searchByDateTable tbody tr');
 
-        searchByDate.addEventListener('input', function () {
-          const searchQuery = this.value.trim().toLowerCase();
+      searchByDate.addEventListener('input', function () {
+        const searchQuery = this.value.trim(); // No need to convert to lowercase
 
-          requestformRows.forEach(row => {
-            const dateCell = row.querySelector('td:nth-child(3)');
-            const dateText = dateCell.textContent.trim(); // Extract text content
-
-            if (dateText.includes(searchQuery)) {
-              row.style.display = '';
-            } else {
-              row.style.display = 'none';
-            }
-          });
+        requestformRows.forEach(row => {
+          const dateCell = row.querySelector('td:nth-child(3)');
+          const dateText = dateCell.textContent.trim(); // Extract text content
+          const rowDate = new Date(dateText.replace(/-/g, '/')); // Replace dashes with slashes for cross-browser compatibility
+          console.log(dateText)
+          // Check if the entered date matches the row's date
+          if (dateText === searchQuery) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
         });
       });
+    });
       //for search input
       document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('searchFullname');
-        const deceasedRows = document.querySelectorAll('tbody tr');
+        const deceasedRows = document.querySelectorAll('#searchFullnameTable tbody tr');
 
         searchInput.addEventListener('input', function () {
           const searchQuery = this.value.trim().toLowerCase();
