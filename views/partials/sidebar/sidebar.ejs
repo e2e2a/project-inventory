@@ -48,13 +48,28 @@ function activeClass(link) {
         <li class="nav-item <%= activeClass('/users') %>">
           <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
             <i class="icon-head menu-icon"></i>
-            <span class="menu-title">User View</span>
+            <span class="menu-title">Users View</span>
             <i class="menu-arrow"></i>
           </a>
           <div class="collapse" id="auth">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="/users"> Users Lists </a></li>
               <li class="nav-item"> <a class="nav-link" href="/user/create"> Add User </a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" data-toggle="collapse" href="#auth1" aria-expanded="false" aria-controls="auth1">
+            <i class="mdi mdi-file-multiple menu-icon"></i>
+            <span class="menu-title">Requests View</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="auth1">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="/requests/pending"> Pending Status </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/requests/process"> Process Status </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/requests/finalized"> Finalized Status </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/requests/add"> Add Status </a></li>
             </ul>
           </div>
         </li>

@@ -98,8 +98,7 @@ module.exports.doEdit = async (req,res) => {
             } else if(user.role === 'supply'){
                 return res.redirect('/supply');
             } else if(user.role === 'superAdmin'){
-                //unfinish
-                return res.redirect('/');
+                return res.redirect('/requests/pending');
             }
         })
         .catch((error) => {

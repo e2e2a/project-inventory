@@ -26,19 +26,19 @@
                             <div class="row align-items-center justify-content-center">
                               <div class="col-xl-12 ">
                                 <div class="row justify-content-between">
-                                  <div class="col-8 col-md-6 col-xl-5 mt-2">
+                                  <div class="col-12 col-md-6 col-xl-5 mt-2">
                                     <div class="input-group justify-content-center align-items-center">
                                       <h5 class="mr-1">Search:</h5>
                                       <input type="text" class="form-control d-flex" name="searchFullnamerequest"
-                                        id="searchFullname" placeholder="Search Name" aria-label="search"
-                                        aria-describedby="search">
+                                        id="searchFullnamerequest" placeholder="Search Name" aria-label="search"
+                                        aria-describedby="search" autocomplete="off">
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <div class="table-responsive text mt-5">
-                              <table class="table table-bordered expandable-table no-footer">
+                              <table id="searchFullnamerequestTable" class="table table-bordered expandable-table no-footer">
                                 <thead>
                                   <tr class="text-center">
                                     <th>Fullname</th>
@@ -125,19 +125,19 @@
                             <div class="row align-items-center justify-content-center">
                               <div class="col-xl-12 ">
                                 <div class="row justify-content-between">
-                                  <div class="col-8 col-md-6 col-xl-5 mt-2">
+                                  <div class="col-12 col-md-6 col-xl-5 mt-2">
                                     <div class="input-group justify-content-center align-items-center">
                                       <h5 class="mr-1">Search:</h5>
-                                      <input type="date" class="form-control" name="name"
-                                        id="search-request-date" placeholder="Search Date" aria-label="search"
-                                        aria-describedby="search">
+                                      <input type="text" class="form-control d-flex" name="searchFullnamerequestFinalized"
+                                        id="searchFullnamerequestFinalized" placeholder="Search Name" aria-label="search"
+                                        aria-describedby="search" autocomplete="off">
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <div class="table-responsive text mt-5">
-                              <table class="table table-bordered expandable-table no-footer">
+                              <table id="searchFullnamerequestFinalizedtable" class="table table-bordered expandable-table no-footer">
                                 <thead>
                                   <tr class="text-center">
                                     <th>Fullname</th>
@@ -219,7 +219,25 @@
       //for search input
       document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchFullnamerequest');
-            const deceasedRows = document.querySelectorAll('tbody tr');
+            const deceasedRows = document.querySelectorAll('#searchFullnamerequestTable tbody tr');
+        
+            searchInput.addEventListener('input', function() {
+                const searchQuery = this.value.trim().toLowerCase();
+        
+                deceasedRows.forEach(row => {
+                    const fullName = row.querySelector('td:first-child').textContent.trim().toLowerCase();
+        
+                    if (fullName.includes(searchQuery)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+      document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchFullnamerequestFinalized');
+            const deceasedRows = document.querySelectorAll('#searchFullnamerequestFinalizedtable tbody tr');
         
             searchInput.addEventListener('input', function() {
                 const searchQuery = this.value.trim().toLowerCase();

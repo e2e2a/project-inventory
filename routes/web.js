@@ -8,6 +8,8 @@ const adminRequestStatusController = require('../controllers/admin/requestStatus
 const supplyIndexController = require('../controllers/supply/indexController');
 const supplyRequestStatusController = require('../controllers/supply/requestStatusController');
 const superAdminIndexController = require('../controllers/superAdmin/indexController');
+const superAdminRequestController = require('../controllers/superAdmin/requestController');
+
 module.exports = function(app) {
     app.get('/login', userLoginController.index);
     app.post('/login', userLoginController.submit);
@@ -35,12 +37,17 @@ module.exports = function(app) {
     app.get('/users/requests/process', supplyRequestStatusController.index);
     app.post('/supply/cancel', supplyRequestStatusController.cancel);
     //super admin
-    app.get('/users', superAdminIndexController.index)
+    app.get('/users', superAdminIndexController.index);
     app.get('/user/create', superAdminIndexController.create);
     app.post('/user/create', superAdminIndexController.doCreate);
     app.post('/user/delete', superAdminIndexController.userDelete);
     app.get('/user/edit/:id', superAdminIndexController.edit);
     app.post('/user/edit/:id/doEdit', superAdminIndexController.doEdit);
+    //requests for superAdmin
+    app.get('/requests/pending', superAdminRequestController.index);
+    app.get('/requests/process', superAdminRequestController.process);
+    app.get('/requests/finalized', );
+    app.get('/requests/add', );
     //ex
     app.get('/table', (req, res) => {
         res.render('ex/table')

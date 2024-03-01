@@ -22,8 +22,7 @@
                                                             <h3 class="font-weight-bold">Requests Status</h3>
                                                         </div>
                                                     </div>
-                                                    <% if(userFormRequests && userFormRequests.filter(reqForm=>
-                                                        ['approved', 'process'].includes(reqForm.status))) { %>
+                                                    <% if(userFormRequests && userFormRequests.filter(reqForm=> ['approved', 'process'].includes(reqForm.status))) { %>
                                                         <div class="row align-items-center justify-content-center">
                                                             <div class="col-xl-12 ">
                                                                 <div class="row justify-content-between">
@@ -37,14 +36,14 @@
                                                                                 id="searchFullname"
                                                                                 placeholder="Search Name"
                                                                                 aria-label="search"
-                                                                                aria-describedby="search">
+                                                                                aria-describedby="search" autocomplete="off">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="table-responsive text mt-5">
-                                                            <table
+                                                            <table id="searchFullnamerequestTable"
                                                                 class="table table-bordered expandable-table no-footer">
                                                                 <thead>
                                                                     <tr class="text-center">
@@ -59,8 +58,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <% userFormRequests.forEach(({ reqForm, user })=> {
-                                                                        %>
+                                                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
                                                                         <% if( reqForm.status==='process' ) {%>
                                                                             <tr class="text-center">
                                                                                 <td>
@@ -220,8 +218,7 @@
                                             </div>
                                         </div>
                                         <!-- This is for status declined && completed -->
-                                        <% if(userFormRequests && userFormRequests.filter(reqForm=> ['completed',
-                                            'declined'].includes(reqForm.reqForm.status)).length > 0) { %>
+                                        <% if(userFormRequests && userFormRequests.filter(reqForm=> ['completed', 'declined'].includes(reqForm.reqForm.status)).length > 0) { %>
                                             <div class="col-md-12 grid-margin stretch-card">
                                                 <div class="card">
                                                     <div class="card-body">
@@ -263,10 +260,8 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <% userFormRequests.forEach(({ reqForm, user })=> {
-                                                                        %>
-                                                                        <% if(reqForm.status==='completed' ||
-                                                                            reqForm.status==='declined' ) {%>
+                                                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                                                                        <% if(reqForm.status==='completed' || reqForm.status==='declined' ) {%>
                                                                             <tr class="text-center">
                                                                                 <td>
                                                                                     <%= user.fullname %>
@@ -289,43 +284,21 @@
                                                                                         class="badge badge-<%= reqForm.status %> text-capitalize">
                                                                                         <%= reqForm.status %>
                                                                                     </label></td>
-                                                                                <% if(reqForm.adminDeclined &&
-                                                                                    reqForm.adminDeclined !=='' ) {%>
-                                                                                    <td>Declined: <%=
-                                                                                            reqForm.adminDeclined %>
+                                                                                <% if(reqForm.adminDeclined && reqForm.adminDeclined !=='' ) {%>
+                                                                                    <td>Declined: <%= reqForm.adminDeclined %>
                                                                                     </td>
-                                                                                    <% } else if(reqForm.adminApproved
-                                                                                        || reqForm.adminApproved !==''
-                                                                                        ){ %>
-                                                                                        <td>Approved: <%=
-                                                                                                reqForm.adminApproved %>
-                                                                                        </td>
-                                                                                        <% } else{ %>
-                                                                                            <td class="text-center">N/A
-                                                                                            </td>
-                                                                                            <% } %>
-                                                                                                <% if(reqForm.supplyDeclined
-                                                                                                    &&
-                                                                                                    reqForm.supplyDeclined
-                                                                                                    !=='' ) {%>
-                                                                                                    <td>Declined: <%=
-                                                                                                            reqForm.supplyDeclined
-                                                                                                            %>
-                                                                                                    </td>
-                                                                                                    <% } else
-                                                                                                        if(reqForm.supplyApproved
-                                                                                                        &&
-                                                                                                        reqForm.supplyApproved
-                                                                                                        !=='' ) {%>
-                                                                                                        <td>Approved:
-                                                                                                            <%= reqForm.supplyApproved
-                                                                                                                %>
-                                                                                                        </td>
-                                                                                                        <% } else{ %>
-                                                                                                            <td
-                                                                                                                class="text-center">
-                                                                                                                N/A</td>
-                                                                                                            <% } %>
+                                                                                <% } else if(reqForm.adminApproved || reqForm.adminApproved !=='' ){ %>
+                                                                                    <td>Approved: <%= reqForm.adminApproved %> </td>
+                                                                                <% } else{ %>
+                                                                                    <td class="text-center">N/A</td>
+                                                                                <% } %>
+                                                                                <% if(reqForm.supplyDeclined && reqForm.supplyDeclined !=='' ) {%>
+                                                                                    <td>Declined: <%= reqForm.supplyDeclined %> </td>
+                                                                                <% } else if(reqForm.supplyApproved && reqForm.supplyApproved !=='' ) {%>
+                                                                                    <td>Approved: <%= reqForm.supplyApproved %> </td>
+                                                                                <% } else{ %>
+                                                                                    <td class="text-center">N/A</td>
+                                                                                <% } %>
                                                                             </tr>
                                                                             <% } %>
                                                                                 <% }); %>
@@ -335,13 +308,11 @@
 
 
                                                     </div>
-                                                    <!-- modal start -->
+                                                    
                                                     <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                                                        <% if(reqForm.status==='completed' ||
-                                                            reqForm.status==='declined' ) {%>
+                                                        <% if(reqForm.status==='completed' || reqForm.status==='declined' ) {%>
                                                             <div class="modal fade" id="modal<%= reqForm._id %>"
-                                                                data-keyboard="false" tabindex="-1"
-                                                                aria-labelledby="staticBackdropLabel"
+                                                                data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
                                                                 aria-hidden="true">
                                                                 <div class="modal-dialog modal-dialog-scrollable">
                                                                     <div class="modal-content">
@@ -356,7 +327,7 @@
                                                                 </div>
                                                             </div>
                                                             <% } %>
-                                                                <% }); %>
+                                                        <% }); %>
                                                 </div>
                                             </div>
                                             <% } %>
@@ -397,7 +368,7 @@
             //for search input
             document.addEventListener('DOMContentLoaded', function () {
                 const searchInput = document.getElementById('searchFullnamerequest');
-                const deceasedRows = document.querySelectorAll('tbody tr');
+                const deceasedRows = document.querySelectorAll('#searchFullnamerequestTable tbody tr');
 
                 searchInput.addEventListener('input', function () {
                     const searchQuery = this.value.trim().toLowerCase();
