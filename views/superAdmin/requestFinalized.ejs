@@ -22,15 +22,15 @@
                                 <h3 class="font-weight-bold">Requests Status</h3>
                               </div>
                             </div>
-                            <% if(userFormRequests && userFormRequests.filter(reqForm => ['approved', 'process'].includes(reqForm.status))) { %>
+                            <% if(userFormRequests && userFormRequests.filter(reqForm => ['completed', 'declined'].includes(reqForm.status))) { %>
                             <div class="row align-items-center justify-content-center">
                               <div class="col-xl-12 ">
                                 <div class="row justify-content-between">
                                   <div class="col-8 col-md-6 col-xl-5 mt-2">
                                     <div class="input-group justify-content-center align-items-center">
                                       <h5 class="mr-1">Search:</h5>
-                                      <input type="text" class="form-control d-flex" name="searchFullnamerequest"
-                                        id="searchFullnamerequest" placeholder="Search Name" aria-label="search"
+                                      <input type="text" class="form-control d-flex" name="searchFullnamerequestq"
+                                        id="searchFullnamerequestq" placeholder="Search Name" aria-label="search"
                                         aria-describedby="search" autocomplete="off">
                                     </div>
                                   </div>
@@ -38,7 +38,7 @@
                               </div>
                             </div>
                             <div class="table-responsive text mt-5">
-                              <table id="searchFullnamerequesttable" class="table table-bordered expandable-table no-footer">
+                              <table id="searchFullnamerequesttableq" class="table table-bordered expandable-table no-footer">
                                 <thead>
                                   <tr class="text-center">
                                     <th>Fullname</th>
@@ -53,7 +53,7 @@
                                 </thead>
                                 <tbody>
                                     <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                                      <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                                      <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
                                   <tr class="text-center">
                                     <td><%= user.fullname %></td>
                                     <td>
@@ -71,11 +71,15 @@
                                     <% }else{ %>
                                       <td>Wating for Supply Approval</td>
                                     <% } %>
-                                    <% if(reqForm.status === 'approved') {%>
-                                        <td class="text-success text-center">Waiting for Admin Approval</td>
-                                    <% } else { %>
-                                        <td class="text-success text-center">Wating for Supply Approval</td>
-                                    <% } %>
+                                        <td class="text-success text-center">
+                                            <form action="/requests/finalized/delete" method="post">
+                                              <input type="hidden" name="reqId" id="reqId"
+                                                value="<%= reqForm._id %>">
+                                              <button type="submit" class="btn btn-danger p-2" title="Delete">
+                                                <i class="mdi mdi-delete"></i>
+                                              </button>
+                                          </form>
+                                        </td>
                                   </tr>
                                   <% } %>
                                     <% }); %>
@@ -88,7 +92,7 @@
                           </div>
                           <!-- modal start -->
                           <% userFormRequests.forEach(({ reqForm, user })=> { %>
-                            <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                            <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
                           <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
@@ -118,8 +122,8 @@
     <script>
       //for search input
       document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchFullnamerequest');
-            const deceasedRows = document.querySelectorAll('#searchFullnamerequesttable tbody tr');
+            const searchInput = document.getElementById('searchFullnamerequestq');
+            const deceasedRows = document.querySelectorAll('#searchFullnamerequesttableq tbody tr');
         
             searchInput.addEventListener('input', function() {
                 const searchQuery = this.value.trim().toLowerCase();

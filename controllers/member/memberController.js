@@ -42,15 +42,21 @@ module.exports.index = async (req, res) => {
 module.exports.requestDelete = async (req, res) => {
     try {
         const reqId = req.body.reqId;
-        const user = await User.findById(req.session.login)
-        await formRequest.findByIdAndDelete(reqId)
-        req.flash('message', 'Request Form has been deleted!');
-        if (user.role === 'admin') {
-            return res.redirect('/admin');
-        } else if (user.role === 'member') {
-            return res.redirect('/');
-        } else if (user.role === 'supply') {
-            return res.redirect('/supply');
+        const user = await User.findById(req.session.login);
+        if (user) {
+            await formRequest.findByIdAndDelete(reqId)
+            req.flash('message', 'Request Form has been deleted!');
+            if (user.role === 'admin') {
+                return res.redirect('/admin');
+            } else if (user.role === 'member') {
+                return res.redirect('/');
+            } else if (user.role === 'supply') {
+                return res.redirect('/supply');
+            } else if (user.role === 'superAdmin') {
+                return res.redirect('/requests/pending');
+            }
+        } else {
+            return res.redirect('/login');
         }
     } catch (error) {
         console.log('error', error);

@@ -9,7 +9,7 @@ const supplyIndexController = require('../controllers/supply/indexController');
 const supplyRequestStatusController = require('../controllers/supply/requestStatusController');
 const superAdminIndexController = require('../controllers/superAdmin/indexController');
 const superAdminRequestController = require('../controllers/superAdmin/requestController');
-
+const profileController = require('../controllers/profileController');
 module.exports = function(app) {
     app.get('/login', userLoginController.index);
     app.post('/login', userLoginController.submit);
@@ -46,8 +46,10 @@ module.exports = function(app) {
     //requests for superAdmin
     app.get('/requests/pending', superAdminRequestController.index);
     app.get('/requests/process', superAdminRequestController.process);
-    app.get('/requests/finalized', );
-    app.get('/requests/add', );
+    app.get('/requests/finalized', superAdminRequestController.finalized);
+    app.post('/requests/finalized/delete', superAdminRequestController.finalizedDelete);
+    app.get('/profile', profileController.edit);
+    app.post('/profile', profileController.doEdit)
     //ex
     app.get('/table', (req, res) => {
         res.render('ex/table')

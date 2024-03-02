@@ -1,7 +1,7 @@
 const SITE_TITLE = 'TESDA';
 const User = require('../../models/user');
 const formRequest = require('../../models/request');
-const user = require('../../models/user');
+const bcrypt = require('bcrypt')
 
 module.exports.index = async (req, res) => {
     try {
@@ -113,24 +113,28 @@ module.exports.userDelete = async (req, res) => {
 }
 
 module.exports.edit = async (req, res) => {
-    const userId = req.session.login;
-    const user = await User.findById(userId);
-    if (user) {
-        if (user.role === 'superAdmin') {
-            const userIdToDisplay = req.params.id;
-            const userToDisplay = await User.findById(userIdToDisplay);
-            res.render('superAdmin/userEdit', {
-                site_title: SITE_TITLE,
-                title: 'Edit',
-                currentUrl: req.originalUrl,
-                user: user,
-                userToDisplay: userToDisplay,
-            });
+    try {
+        const userId = req.session.login;
+        const user = await User.findById(userId);
+        if (user) {
+            if (user.role === 'superAdmin') {
+                const userIdToDisplay = req.params.id;
+                const userToDisplay = await User.findById(userIdToDisplay);
+                res.render('superAdmin/userEdit', {
+                    site_title: SITE_TITLE,
+                    title: 'Edit',
+                    currentUrl: req.originalUrl,
+                    user: user,
+                    userToDisplay: userToDisplay,
+                });
+            } else {
+                return res.status(400).render('400');
+            }
         } else {
-            return res.status(400).render('400');
+            return res.redirect('/login');
         }
-    } else {
-        return res.redirect('/login');
+    } catch (error) {
+        console.log('error:', error)
     }
 }
 
@@ -152,23 +156,30 @@ module.exports.doEdit = async (req, res) => {
                             req.flash('error', 'Password does not match.');
                             return res.redirect(`/user/edit/${userIdToEdit}`);
                         }
-                        const data = {
-                            fullname: req.body.fullname,
-                            email: req.body.email,
-                            contact: req.body.contact,
-                            role: req.body.role,
-                            password: req.body.password
-                        }
-                        User.findByIdAndUpdate(userIdToEdit, data, { new: true })
-                            .then((user) => {
-                                req.flash('message', 'User has been updated.');
-                                return res.redirect('/users');
-                            })
-                            .catch((error) => {
-                                console.error('Error updating data:', error);
-                                req.flash('message', 'Update failed!');
-                                return res.status(500).render('500');
-                            });
+                        bcrypt.hash(password, 10, async (error, hash) => {
+                            if (error) {
+                                console.error("Error hashing password:", error);
+                                req.flash('message', 'An error occurred. Please try again.');
+                                return res.redirect(`/user/edit/${userIdToEdit}`);
+                            }
+                            const data = {
+                                fullname: req.body.fullname,
+                                email: req.body.email,
+                                contact: req.body.contact,
+                                role: req.body.role,
+                                password: hash
+                            }
+                            User.findByIdAndUpdate(userIdToEdit, data, { new: true })
+                                .then((user) => {
+                                    req.flash('message', 'User has been updated.');
+                                    return res.redirect('/users');
+                                })
+                                .catch((error) => {
+                                    console.error('Error updating data:', error);
+                                    req.flash('message', 'Update failed!');
+                                    return res.status(500).render('500');
+                                });
+                        });
                     } else {
                         const data = {
                             fullname: req.body.fullname,
@@ -200,23 +211,30 @@ module.exports.doEdit = async (req, res) => {
                                 req.flash('error', 'Password does not match.');
                                 return res.redirect(`/user/edit/${userIdToEdit}`);
                             }
-                            const data = {
-                                fullname: req.body.fullname,
-                                email: req.body.email,
-                                contact: req.body.contact,
-                                role: req.body.role,
-                                password: req.body.password
-                            }
-                            User.findByIdAndUpdate(userIdToEdit, data, { new: true })
-                                .then((user) => {
-                                    req.flash('message', 'User has been updated.');
-                                    return res.redirect('/users');
-                                })
-                                .catch((error) => {
-                                    console.error('Error updating data:', error);
-                                    req.flash('message', 'Update failed!');
-                                    return res.status(500).render('500');
-                                });
+                            bcrypt.hash(password, 10, async (error, hash) => {
+                                if (error) {
+                                    console.error("Error hashing password:", error);
+                                    req.flash('message', 'An error occurred. Please try again.');
+                                    return res.redirect(`/user/edit/${userIdToEdit}`);
+                                }
+                                const data = {
+                                    fullname: req.body.fullname,
+                                    email: req.body.email,
+                                    contact: req.body.contact,
+                                    role: req.body.role,
+                                    password: req.body.password
+                                }
+                                User.findByIdAndUpdate(userIdToEdit, data, { new: true })
+                                    .then((user) => {
+                                        req.flash('message', 'User has been updated.');
+                                        return res.redirect('/users');
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error updating data:', error);
+                                        req.flash('message', 'Update failed!');
+                                        return res.status(500).render('500');
+                                    });
+                            });
                         } else {
                             const data = {
                                 fullname: req.body.fullname,

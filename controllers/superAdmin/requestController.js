@@ -72,7 +72,7 @@ module.exports.process = async (req, res) => {
                 res.render('superAdmin/requestProcess', {
                     site_title: SITE_TITLE,
                     title: 'Requests',
-                    userFormRequests:allUserData,
+                    userFormRequests: allUserData,
                     currentUrl: req.originalUrl,
                     user: user,
                 });
@@ -85,5 +85,60 @@ module.exports.process = async (req, res) => {
     } catch (error) {
         console.log('error', error);
         return res.status(500).render('500')
+    }
+}
+
+module.exports.finalized = async (req, res) => {
+    try {
+        const userId = req.session.login;
+        const user = await User.findById(userId);
+        if (user) {
+            const allUserFormRequests = await formRequest.find();
+            const userDataPromises = allUserFormRequests
+                .map(async (reqForm) => {
+                    return {
+                        reqForm: reqForm,
+                        user: await User.findById(reqForm.userId)
+                    };
+                });
+
+            // Resolve all promises
+            const allUserData = await Promise.all(userDataPromises);
+            if (user.role === 'superAdmin') {
+                res.render('superAdmin/requestFinalized', {
+                    site_title: SITE_TITLE,
+                    title: 'Requests',
+                    userFormRequests: allUserData,
+                    currentUrl: req.originalUrl,
+                    user: user,
+                });
+            } else {
+                return res.render('404')
+            }
+        } else {
+            return res.redirect('/login')
+        }
+    } catch (error) {
+        console.log('error', error);
+        return res.status(500).render('500')
+    }
+}
+
+module.exports.finalizedDelete = async (req, res) => {
+    try {
+        const reqId = req.body.reqId;
+        const user = await User.findById(req.session.login)
+        if (user) {
+            if (user.role === 'superAdmin') {
+                await formRequest.findByIdAndDelete(reqId)
+                req.flash('message', 'Request Form has been deleted!');
+                return res.redirect('/requests/finalized');
+            }
+        } else {
+            return res.redirect('/login')
+        }
+    } catch (error) {
+        console.log('error', error);
+        return res.status(500).render('500');
     }
 }
