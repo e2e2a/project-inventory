@@ -44,12 +44,13 @@ module.exports = function(app) {
     app.get('/user/edit/:id', superAdminIndexController.edit);
     app.post('/user/edit/:id/doEdit', superAdminIndexController.doEdit);
     //requests for superAdmin
+    app.get('/superadmin', superAdminIndexController.home)
     app.get('/requests/pending', superAdminRequestController.index);
     app.get('/requests/process', superAdminRequestController.process);
     app.get('/requests/finalized', superAdminRequestController.finalized);
     app.post('/requests/finalized/delete', superAdminRequestController.finalizedDelete);
     app.get('/profile', profileController.edit);
-    app.post('/profile', profileController.doEdit)
+    app.post('/profile', profileController.doEdit);
     //ex
     app.get('/table', (req, res) => {
         res.render('ex/table')

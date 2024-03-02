@@ -80,7 +80,7 @@ module.exports.submit = async (req, res) => {
                         return res.redirect('/login');
                     }
                     req.session.login = user.id;
-                    res.redirect('/users');
+                    res.redirect('/superadmin');
                 });
             }
         } else{

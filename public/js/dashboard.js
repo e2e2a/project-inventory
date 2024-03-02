@@ -178,20 +178,40 @@
       });
     }
     if ($("#sales-chart").length) {
+        // Get the current date
+        const currentDate = new Date();
+
+        // Define an array to map day indices to their string representation
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        // Get the current day of the week index (0: Sunday, 1: Monday, ..., 6: Saturday)
+        const currentDayIndex = currentDate.getDay();
+
+        // Initialize an empty array to store the labels
+        const labels = [];
+
+        // Generate labels for the last five days including today
+        for (let i = currentDayIndex; i >= currentDayIndex - 4; i--) {
+            const dayIndex = i < 0 ? i + 7 : i; // Handle negative indices for previous week
+            labels.unshift(daysOfWeek[dayIndex]); // Add the day name to the beginning of the array
+        }
+
+        //this is for the request
+        
       var SalesChartCanvas = $("#sales-chart").get(0).getContext("2d");
       var SalesChart = new Chart(SalesChartCanvas, {
         type: 'bar',
         data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+          labels: labels ,
           datasets: [{
-              label: 'Offline Sales',
-              data: [480, 230, 470, 210, 330],
-              backgroundColor: '#98BDFF'
+              label: 'Request Completed',
+              data: [2, 3, 5, 6, 7],
+              backgroundColor: '#4B49AC'
             },
             {
-              label: 'Online Sales',
-              data: [400, 340, 550, 480, 170],
-              backgroundColor: '#4B49AC'
+              label: 'Request Declined',
+              data: [8, 5, 4, 3, 2],
+              backgroundColor: '#FF0000'
             }
           ]
         },
@@ -218,9 +238,9 @@
               ticks: {
                 display: true,
                 min: 0,
-                max: 560,
+                max: 20,
                 callback: function(value, index, values) {
-                  return  value + '$' ;
+                  return  value + '' ;
                 },
                 autoSkip: true,
                 maxTicksLimit: 10,

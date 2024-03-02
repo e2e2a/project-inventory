@@ -3,6 +3,34 @@ const User = require('../../models/user');
 const formRequest = require('../../models/request');
 const bcrypt = require('bcrypt')
 
+module.exports.home = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
+    const allUserFormRequests = await formRequest.find();
+    const userDataPromises = allUserFormRequests
+        .map(async (reqForm) => {
+            return {
+                reqForm: reqForm,
+                user: await User.findById(reqForm.userId)
+            };
+        });
+    const allUserData = await Promise.all(userDataPromises);
+
+    
+    if (user) {
+        res.render('superAdmin/index', {
+            site_title: SITE_TITLE,
+            title: 'Home',
+            messages: req.flash(),
+            currentUrl: req.originalUrl,
+            userFormRequests: allUserData,
+            user: user,
+        });
+    } else {
+        return res.redirect('/login');
+    }
+}
+
 module.exports.index = async (req, res) => {
     try {
         const userId = req.session.login;
