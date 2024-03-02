@@ -3,9 +3,9 @@ const User = require('../../models/user');
 const formRequest = require('../../models/request');
 
 module.exports.index = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const allUserFormRequests = await formRequest.find();
             const userDataPromises = allUserFormRequests
@@ -22,26 +22,30 @@ module.exports.index = async (req, res) => {
                 res.render('admin/requestStatus', {
                     site_title: SITE_TITLE,
                     title: 'Requests',
-                    userFormRequests:allUserData,
+                    userFormRequests: allUserData,
                     currentUrl: req.originalUrl,
                     user: user,
                 });
             } else {
-                return res.render('404')
+                return res.render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user
+        })
     }
 }
 
-module.exports.cancel = async (req,res) => {
+module.exports.cancel = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const reqFormId = req.body.reqFormId;
             const data = {
@@ -59,14 +63,18 @@ module.exports.cancel = async (req,res) => {
                 .catch((error) => {
                     console.error('Error updating data:', error);
                     req.flash('message', 'Update failed!');
-                    return res.status(500).render('500');
+                    return res.status(500).render('500', {
+                        user: user
+                    });
                 });
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('err:', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user
+        })
     }
 
 }

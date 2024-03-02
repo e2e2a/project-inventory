@@ -12,38 +12,47 @@
                                     <div class="row">
                                         <div class="col-md-12 grid-margin transparent">
                                             <div class="row">
-                                                <div class="col-md-3 mb-4 stretch-card transparent">
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-dark-blue">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Total Users</p>
+                                                            <p class="fs-30 mb-2"><%= Alluser.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-dark-blue">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Total Request</p>
+                                                            <p class="fs-30 mb-2"><%= userFormRequests.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 stretch-card transparent">
                                                     <div class="card card-tale">
                                                         <div class="card-body">
                                                             <p class="mb-4">Today’s Request</p>
-                                                            <p class="fs-30 mb-2">4006</p>
+                                                            <p class="fs-30 mb-2"><%= TodayRequest.length %></p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 mb-4 stretch-card transparent">
+                                                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 stretch-card transparent">
                                                     <div class="card card-tale">
                                                         <div class="card-body">
-                                                            <p class="mb-4">Today’s Request</p>
-                                                            <p class="fs-30 mb-2">4006</p>
+                                                            <p class="mb-4">Completed Request</p>
+                                                            <p class="fs-30 mb-2"><%= CompletedRequest.length %></p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 mb-4 stretch-card transparent">
+                                                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 stretch-card transparent">
                                                     <div class="card card-tale">
                                                         <div class="card-body">
-                                                            <p class="mb-4">Today’s Request</p>
-                                                            <p class="fs-30 mb-2">4006</p>
+                                                            <p class="mb-4">Declined Request</p>
+                                                            <p class="fs-30 mb-2"><%= DeclinedRequest.length %></p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 mb-4 stretch-card transparent">
-                                                    <div class="card card-tale">
-                                                        <div class="card-body">
-                                                            <p class="mb-4">Your Total Request</p>
-                                                            <p class="fs-30 mb-2">61344</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -106,26 +115,4 @@
                             </div>
                 </div>
         </div>
-
-        <script>
-            //for search input
-            document.addEventListener('DOMContentLoaded', function () {
-                const searchInput = document.getElementById('searchByFullname');
-                const deceasedRows = document.querySelectorAll('tbody tr');
-
-                searchInput.addEventListener('input', function () {
-                    const searchQuery = this.value.trim().toLowerCase();
-
-                    deceasedRows.forEach(row => {
-                        const fullName = row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
-
-                        if (fullName.includes(searchQuery)) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        </script>
         <%- include('./../partials/footer/footer.ejs') %>

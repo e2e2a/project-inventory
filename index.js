@@ -6,7 +6,7 @@ const bodyparser = require('body-parser');
 var path = require('path');
 const dbConnect = require('./database/dbConnect');
 const flash = require('express-flash');
-// const User = require('./models/user');
+const User = require('./models/user');
 
 const startServer = require('./database/UserCreated');
 
@@ -37,26 +37,27 @@ app.use(function (req, res, next) {
 });
 
 require('./routes/web')(app);
-// app.use(async(req, res, next) => {
-//     const user = await User.findById(req.session.login);
-//     if (!user) {
-//         return res.redirect('/login');
-//     }
-//     if (user.role === 'member') {
-//         return res.redirect('/');
-//     } else if (user.role === 'admin') {
-//         return res.redirect('/admin');
-//     } else if (user.role === 'creator') {
-//         return res.redirect('/vehicles');
-//     } else {
-//         console.log('Unknown role logged in');
-//     }
-//     next();
-// });
+app.use(async(req, res, next) => {
+    const user = await User.findById(req.session.login);
+    if (!user) {
+        return res.redirect('/login');
+    }
+    // if (user.role === 'member') {
+    //     return res.redirect('/');
+    // } else if (user.role === 'admin') {
+    //     return res.redirect('/admin');
+    // } else if (user.role === 'creator') {
+    //     return res.redirect('/vehicles');
+    // } else {
+    //     console.log('Unknown role logged in');
+    // }
+    next();
+});
 
-// app.use((req, res, next) => {
-//     res.status(404).render('404');
-// });
+app.use(async(req, res, next) => {
+    const user = await User.findById(req.session.login);
+    res.status(404).render('404',{user:user,});
+});
 const PORT = process.env.PORT
 app.listen(PORT, async () => {
     console.log("Server is running at port", PORT);

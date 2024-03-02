@@ -11,8 +11,8 @@ module.exports.index = (req,res) => {
 }
 
 module.exports.submit = async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
     try {
-        const user = await User.findOne({ email: req.body.email });
         if(user){
             if(user.role === 'admin'){
                 if (!user) {
@@ -90,7 +90,9 @@ module.exports.submit = async (req, res) => {
         
     } catch (error) {
         req.flash('error', 'An error occurred.');
-        return res.status(500).render('500');
+        return res.status(500).render('500',{
+            user:user,
+        });
     }
 }
 

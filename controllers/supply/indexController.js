@@ -3,9 +3,9 @@ const User = require('../../models/user');
 const formRequest = require('../../models/request')
 
 module.exports.index = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         const formrequests = await formRequest.find();
         if (user) {
             const AllDataRequestForms = formrequests
@@ -30,6 +30,12 @@ module.exports.index = async (req, res) => {
 
             // Resolve all promises
             const userData = await Promise.all(userDataPromises);
+            const currentDate = new Date();
+            const dateCreated = currentDate.toISOString().split('T')[0];
+            const userFormRequestsToday = userFormRequests.filter(reqForm => {
+                const reqFormDate = (reqForm.dateCreated);
+                return reqFormDate === dateCreated;
+            });
             if (user.role === 'supply') {
                 res.render('supply/index', {
                     site_title: SITE_TITLE,
@@ -39,23 +45,28 @@ module.exports.index = async (req, res) => {
                     currentUrl: req.originalUrl,
                     user: user,
                     userFormRequests: userData,
+                    userFormRequestsToday: userFormRequestsToday,
                 });
             } else {
-                return res.render('404');
+                return res.render('404', {
+                    user: user,
+                });
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500');
+        return res.status(500).render('500',{
+            user:user,
+        });
     }
 }
 
 module.exports.approved = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         const currentDate = new Date();
         const dateCreated = currentDate.toISOString().split('T')[0];
         if (user) {
@@ -74,21 +85,25 @@ module.exports.approved = async (req, res) => {
                 .catch((error) => {
                     console.error('Error updating data:', error);
                     req.flash('message', 'Update failed!');
-                    return res.status(500).render('500');
+                    return res.status(500).render('500', {
+                        user: user,
+                    });
                 });
         } else {
             return res.redirect('/login');
         }
     } catch (error) {
         console.log('err:', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
-module.exports.declined = async (req,res) => {
+module.exports.declined = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const currentDate = new Date();
             const dateCreated = currentDate.toISOString().split('T')[0];
@@ -106,21 +121,25 @@ module.exports.declined = async (req,res) => {
                 .catch((error) => {
                     console.error('Error updating data:', error);
                     req.flash('message', 'Update failed!');
-                    return res.status(500).render('500');
+                    return res.status(500).render('500', {
+                        user: user,
+                    });
                 });
         } else {
             return res.redirect('/login');
         }
     } catch (error) {
         console.log('err:', error);
-        return res.status(500).render('500');
+        return res.status(500).render('500', {
+            user: user,
+        });
     }
 }
 
 module.exports.completed = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const reqFormId = req.body.reqFormId;
             const remark = {
@@ -135,13 +154,17 @@ module.exports.completed = async (req, res) => {
                 .catch((error) => {
                     console.error('Error updating data:', error);
                     req.flash('message', 'Update failed!');
-                    return res.status(500).render('500');
+                    return res.status(500).render('500', {
+                        user: user,
+                    });
                 });
         } else {
             return res.redirect('/login');
         }
     } catch (error) {
         console.log('err:', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }

@@ -3,9 +3,9 @@ const User = require('../../models/user');
 const formRequest = require('../../models/request')
 
 module.exports.index = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             res.render('member/createReq', {
                 site_tile: SITE_TITLE,
@@ -18,16 +18,18 @@ module.exports.index = async (req, res) => {
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user:user
+        })
     }
 }
 
 module.exports.submit = async (req, res) => {
+    const userId = req.session.login
+    const user = await User.findById(userId)
     try {
         const currentDate = new Date();
         const dateCreated = currentDate.toISOString().split('T')[0];
-        const userId = req.session.login
-        const user = await User.findById(userId)
         if (user) {
             const formData = new formRequest({
                 userId: user._id,
@@ -45,7 +47,9 @@ module.exports.submit = async (req, res) => {
                 });
             } else {
                 req.flash('error', 'Something went wrong!');
-                return res.status(500).render('500');
+                return res.status(500).render('500', {
+                    user: user
+                });
             }
 
         } else {
@@ -53,7 +57,9 @@ module.exports.submit = async (req, res) => {
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user
+        })
     }
 }
 
@@ -68,45 +74,56 @@ module.exports.edit = async (req, res) => {
                 title: 'Edit',
                 site_title: SITE_TITLE,
                 user: user,
-                formToEdit:formToEdit,
+                formToEdit: formToEdit,
                 currentUrl: req.originalUrl
             })
         } else {
-            return res.status(404).render('404')
+            return res.status(404).render('404', {
+                user: user,
+            })
         }
     } else {
         return res.redirect('/login')
     }
 }
 
-module.exports.doEdit = async (req,res) => {
+module.exports.doEdit = async (req, res) => {
     const userId = req.session.login;
     const user = await User.findById(userId);
-    if(user){
-        const reqFormId = req.params.id;
-        const formUpdate = {
-            purpose: req.body.purpose,
-        }
-        formRequest.findByIdAndUpdate(reqFormId, formUpdate, { new: true })
-        .then((savedData) => {
-            console.log('success', savedData);
-            req.flash('message', 'Creation Success!');
-            if (user.role === 'member') {
-                return res.redirect('/');
-            } else if(user.role === 'admin'){
-                return res.redirect('/admin');
-            } else if(user.role === 'supply'){
-                return res.redirect('/supply');
-            } else if(user.role === 'superAdmin'){
-                return res.redirect('/requests/pending');
+    try {
+        if (user) {
+            const reqFormId = req.params.id;
+            const formUpdate = {
+                purpose: req.body.purpose,
             }
+            formRequest.findByIdAndUpdate(reqFormId, formUpdate, { new: true })
+                .then((savedData) => {
+                    console.log('success', savedData);
+                    req.flash('message', 'Creation Success!');
+                    if (user.role === 'member') {
+                        return res.redirect('/');
+                    } else if (user.role === 'admin') {
+                        return res.redirect('/admin');
+                    } else if (user.role === 'supply') {
+                        return res.redirect('/supply');
+                    } else if (user.role === 'superAdmin') {
+                        return res.redirect('/requests/pending');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error saving data:', error);
+                    req.flash('failed', 'Creation failed!');
+                    return res.status(500).render('500', {
+                        user: user,
+                    });
+                });
+        } else {
+            return res.redirect('/login')
+        }
+    } catch (error) {
+        console.log('error:', error);
+        return res.status(500).render('500', {
+            user: user
         })
-        .catch((error) => {
-            console.error('Error saving data:', error);
-            req.flash('failed', 'Creation failed!');
-            return res.status(500).render('500');
-        });
-    }else{
-
     }
 }

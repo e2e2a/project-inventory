@@ -16,9 +16,8 @@ module.exports.index = async (req, res) => {
                     };
                 });
 
-            // Resolve all promises
             const formData = await Promise.all(AllDataRequestForms);
-            // This is for the user.login making a request
+
             const userFormRequests = await formRequest.find({ userId: userId });
             const userDataPromises = userFormRequests
                 .map(async (reqForm) => {
@@ -28,8 +27,13 @@ module.exports.index = async (req, res) => {
                     };
                 });
 
-            // Resolve all promises
             const userData = await Promise.all(userDataPromises);
+            const currentDate = new Date();
+            const dateCreated = currentDate.toISOString().split('T')[0];
+            const userFormRequestsToday = userFormRequests.filter(reqForm => {
+                const reqFormDate = (reqForm.dateCreated);
+                return reqFormDate === dateCreated;
+            });
             if (user.role === 'admin') {
                 res.render('admin/index', {
                     site_title: SITE_TITLE,
@@ -39,9 +43,12 @@ module.exports.index = async (req, res) => {
                     currentUrl: req.originalUrl,
                     user: user,
                     userFormRequests: userData,
+                    userFormRequestsToday:userFormRequestsToday,
                 });
             } else {
-                return res.render('404')
+                return res.render('404',{
+                    user:user,
+                })
             }
         } else {
             return res.redirect('/login')
@@ -53,9 +60,9 @@ module.exports.index = async (req, res) => {
 }
 
 module.exports.approved = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         const currentDate = new Date();
         const dateCreated = currentDate.toISOString().split('T')[0];
         if (user) {
@@ -79,21 +86,25 @@ module.exports.approved = async (req, res) => {
                 .catch((error) => {
                     console.error('Error updating data:', error);
                     req.flash('message', 'Update failed!');
-                    return res.status(500).render('500');
+                    return res.status(500).render('500', {
+                        user:user
+                    });
                 });
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('err:', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user:user
+        })
     }
 }
 
 module.exports.declined = async (req,res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const currentDate = new Date();
             const dateCreated = currentDate.toISOString().split('T')[0];
@@ -111,13 +122,17 @@ module.exports.declined = async (req,res) => {
                 .catch((error) => {
                     console.error('Error updating data:', error);
                     req.flash('message', 'Update failed!');
-                    return res.status(500).render('500');
+                    return res.status(500).render('500', {
+                        user:user
+                    });
                 });
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('err:', error);
-        return res.status(500).render('500');
+        return res.status(500).render('500', {
+            user:user
+        });
     }
 }

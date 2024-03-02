@@ -3,9 +3,9 @@ const User = require('../../models/user');
 const formRequest = require('../../models/request');
 
 module.exports.index = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const userFormRequests = await formRequest.find({userId: userId});
             const userDataPromises = userFormRequests
@@ -27,13 +27,17 @@ module.exports.index = async (req, res) => {
                     user: user,
                 });
             } else {
-                return res.render('404')
+                return res.render('404',{
+                    user:user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500',{
+            user:user,
+        })
     }
 }

@@ -36,7 +36,15 @@
             </div>
             <div class="row mt-5">
               <div class="col-12 text-center mt-xl-2">
-                <a class="text-white font-weight-medium" href="/">Back to home</a>
+                <% if(user.role === 'member') {%>
+                  <a class="text-white font-weight-medium" href="/">Back to home</a>
+                <% } else if(user.role === 'admin') {%>
+                  <a class="text-white font-weight-medium" href="/admin">Back to home</a>
+                <% } else if(user.role === 'supply') {%>
+                  <a class="text-white font-weight-medium" href="/supply">Back to home</a>
+                <% } else if(user.role === 'superAdmin') {%>
+                  <a class="text-white font-weight-medium" href="/superadmin">Back to home</a>
+                <% } %>
               </div>
             </div>
             <div class="row mt-5">

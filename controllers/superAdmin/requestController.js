@@ -3,9 +3,9 @@ const User = require('../../models/user');
 const formRequest = require('../../models/request');
 const remarkBackUp = require('../../models/remark');
 module.exports.index = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         const formrequests = await formRequest.find();
         if (user) {
             const AllDataRequestForms = formrequests
@@ -16,9 +16,7 @@ module.exports.index = async (req, res) => {
                     };
                 });
 
-            // Resolve all promises
             const formData = await Promise.all(AllDataRequestForms);
-            // This is for the user.login making a request
             const userFormRequests = await formRequest.find({ userId: userId });
             const userDataPromises = userFormRequests
                 .map(async (reqForm) => {
@@ -41,21 +39,25 @@ module.exports.index = async (req, res) => {
                     userFormRequests: userData,
                 });
             } else {
-                return res.status(400).render('404')
+                return res.status(404).render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
 module.exports.process = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const allUserFormRequests = await formRequest.find();
             const userDataPromises = allUserFormRequests
@@ -77,21 +79,25 @@ module.exports.process = async (req, res) => {
                     user: user,
                 });
             } else {
-                return res.render('404')
+                return res.render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
 module.exports.finalized = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const allUserFormRequests = await formRequest.find();
             const userDataPromises = allUserFormRequests
@@ -113,21 +119,25 @@ module.exports.finalized = async (req, res) => {
                     user: user,
                 });
             } else {
-                return res.render('404')
+                return res.render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500',{
+            user:user,
+        })
     }
 }
 
 module.exports.finalizedDelete = async (req, res) => {
+    const reqId = req.body.reqId;
+    const user = await User.findById(req.session.login)
     try {
-        const reqId = req.body.reqId;
-        const user = await User.findById(req.session.login)
         if (user) {
             if (user.role === 'superAdmin') {
                 await formRequest.findByIdAndDelete(reqId)
@@ -139,6 +149,8 @@ module.exports.finalizedDelete = async (req, res) => {
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500');
+        return res.status(500).render('500',{
+            user:user,
+        });
     }
 }

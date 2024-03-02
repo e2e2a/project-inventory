@@ -1,40 +1,66 @@
 const SITE_TITLE = 'TESDA';
 const User = require('../../models/user');
 const formRequest = require('../../models/request');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const e = require('express');
 
 module.exports.home = async (req, res) => {
     const userId = req.session.login;
     const user = await User.findById(userId);
-    const allUserFormRequests = await formRequest.find();
-    const userDataPromises = allUserFormRequests
-        .map(async (reqForm) => {
-            return {
-                reqForm: reqForm,
-                user: await User.findById(reqForm.userId)
-            };
-        });
-    const allUserData = await Promise.all(userDataPromises);
+    try {
+        const allUserFormRequests = await formRequest.find();
+        const userDataPromises = allUserFormRequests
+            .map(async (reqForm) => {
+                return {
+                    reqForm: reqForm,
+                    user: await User.findById(reqForm.userId)
+                };
+            });
+        const allUserData = await Promise.all(userDataPromises);
+        const Alluser = await User.find();
 
-    
-    if (user) {
-        res.render('superAdmin/index', {
-            site_title: SITE_TITLE,
-            title: 'Home',
-            messages: req.flash(),
-            currentUrl: req.originalUrl,
-            userFormRequests: allUserData,
-            user: user,
+        const currentDate = new Date();
+        const dateCreated = currentDate.toISOString().split('T')[0];
+        const TodayRequest = allUserFormRequests.filter(reqForm => {
+            const reqFormDate = (reqForm.dateCreated);
+            return reqFormDate === dateCreated;
         });
-    } else {
-        return res.redirect('/login');
+        const CompletedRequest = await formRequest.find({ status: 'completed' });
+        const DeclinedRequest = await formRequest.find({ status: 'declined' });
+        if (user) {
+            if (user.role === 'superAdmin') {
+                res.render('superAdmin/index', {
+                    site_title: SITE_TITLE,
+                    title: 'Home',
+                    messages: req.flash(),
+                    currentUrl: req.originalUrl,
+                    userFormRequests: allUserData,
+                    user: user,
+                    Alluser: Alluser,
+                    TodayRequest: TodayRequest,
+                    CompletedRequest: CompletedRequest,
+                    DeclinedRequest: DeclinedRequest,
+                });
+            } else {
+                return res.status(404).render('404', {
+                    user: user,
+                })
+            }
+        } else {
+            return res.redirect('/login');
+        }
+    } catch (error) {
+        console.log('error:', error);
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
 module.exports.index = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const usersData = await User.find()
             if (user.role === 'superAdmin') {
@@ -46,21 +72,25 @@ module.exports.index = async (req, res) => {
                     user: user,
                 });
             } else {
-                return res.render('404')
+                return res.render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
 module.exports.create = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             if (user.role === 'superAdmin') {
                 res.render('superAdmin/userCreate', {
@@ -70,21 +100,25 @@ module.exports.create = async (req, res) => {
                     user: user,
                 });
             } else {
-                return res.render('404')
+                return res.render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
 module.exports.doCreate = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             if (user.role === 'superAdmin') {
                 const email = req.body.email;
@@ -111,39 +145,47 @@ module.exports.doCreate = async (req, res) => {
                     return res.redirect(`/users`);
                 }
             } else {
-                return res.redirect('/404')
+                return res.render('404', {
+                    user: user,
+                })
             }
         } else {
             return res.redirect('/login')
         }
     } catch (error) {
         console.error('Registration failed:', error);
-        return res.status(500).render('500');
+        return res.status(500).render('500', {
+            user: user,
+        });
     }
 }
 
 module.exports.userDelete = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user.role === 'superAdmin') {
             const userIdToDelete = req.body.userId;
             await User.findByIdAndDelete(userIdToDelete);
             req.flash('message', 'User has been deleted.');
             return res.redirect('/users');
         } else {
-            return res.status(404).render('400')
+            return res.status(404).render('404', {
+                user: user,
+            })
         }
     } catch (error) {
         console.error('error:', error);
-        return res.status(500).render('500');
+        return res.status(500).render('500', {
+            user: user,
+        });
     }
 }
 
 module.exports.edit = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             if (user.role === 'superAdmin') {
                 const userIdToDisplay = req.params.id;
@@ -156,13 +198,16 @@ module.exports.edit = async (req, res) => {
                     userToDisplay: userToDisplay,
                 });
             } else {
-                return res.status(400).render('400');
+                return res.status(404).render('404');
             }
         } else {
             return res.redirect('/login');
         }
     } catch (error) {
         console.log('error:', error)
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
@@ -285,7 +330,7 @@ module.exports.doEdit = async (req, res) => {
                 }
 
             } else {
-                return res.status(400).render('400');
+                return res.status(404).render('404');
             }
         } else {
             return res.redirect('/login');

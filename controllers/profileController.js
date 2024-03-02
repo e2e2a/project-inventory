@@ -5,9 +5,9 @@ const bcrypt = require('bcrypt')
 
 
 module.exports.edit = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             res.render('profile', {
                 site_title: SITE_TITLE,
@@ -19,14 +19,17 @@ module.exports.edit = async (req, res) => {
             return res.redirect('/login');
         }
     } catch (error) {
-        console.log('error:', error)
+        console.log('error:', error);
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 }
 
 module.exports.doEdit = async (req, res) => {
+    const userId = req.session.login;
+    const user = await User.findById(userId);
     try {
-        const userId = req.session.login;
-        const user = await User.findById(userId);
         if (user) {
             const email = req.body.email
             if (user.email === email) {
@@ -57,7 +60,9 @@ module.exports.doEdit = async (req, res) => {
                             .catch((error) => {
                                 console.error('Error updating data:', error);
                                 req.flash('message', 'Update failed!');
-                                return res.status(500).render('500');
+                                return res.status(500).render('500', {
+                                    user: user,
+                                });
                             });
                     });
                 } else {
@@ -74,7 +79,9 @@ module.exports.doEdit = async (req, res) => {
                         .catch((error) => {
                             console.error('Error updating data:', error);
                             req.flash('message', 'Update failed!');
-                            return res.status(500).render('500');
+                            return res.status(500).render('500', {
+                                user: user,
+                            });
                         });
                 }
             } else {
@@ -110,7 +117,9 @@ module.exports.doEdit = async (req, res) => {
                                 .catch((error) => {
                                     console.error('Error updating data:', error);
                                     req.flash('message', 'Update failed!');
-                                    return res.status(500).render('500');
+                                    return res.status(500).render('500', {
+                                        user: user,
+                                    });
                                 });
                         });
                     } else {
@@ -127,7 +136,9 @@ module.exports.doEdit = async (req, res) => {
                             .catch((error) => {
                                 console.error('Error updating data:', error);
                                 req.flash('message', 'Update failed!');
-                                return res.status(500).render('500');
+                                return res.status(500).render('500', {
+                                    user: user,
+                                });
                             });
                     }
                 }
@@ -137,7 +148,9 @@ module.exports.doEdit = async (req, res) => {
         }
     } catch (error) {
         console.log('error', error);
-        return res.status(500).render('500')
+        return res.status(500).render('500', {
+            user: user,
+        })
     }
 
 }
