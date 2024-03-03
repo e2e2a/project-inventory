@@ -12,16 +12,16 @@ const startServer = require('./database/UserCreated');
 
 const app = express();
 const conn = dbConnect();
-
+// const { initializeWebSocket } = require('./websocket');
 // const store = new MongoDBSessionStore({
 //     uri: process.env.MONGODB_CONNECT_URI,
 //     collection: 'sessions'
 // });
 app.use(session({
     secret: 'sessionsecret777', 
-    // cookie: {
-    //     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-    //   },
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+      },
     resave: false,
     saveUninitialized: true,
     // store: store,
@@ -59,7 +59,9 @@ app.use(async(req, res, next) => {
     res.status(404).render('404',{user:user,});
 });
 const PORT = process.env.PORT
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
     console.log("Server is running at port", PORT);
     await startServer();
 });
+
+// initializeWebSocket(server);
