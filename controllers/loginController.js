@@ -96,6 +96,46 @@ module.exports.submit = async (req, res) => {
     }
 }
 
+// const store = new MongoDBSessionStore({
+//     uri: process.env.MONGODB_CONNECT_URI,
+//     collection: 'sessions'
+// });
+
+// module.exports.logout = (req, res) => {
+//     const sessionId = req.sessionID;
+//     console.log(sessionId) 
+//     const loginId = req.session.login;
+//     if (!loginId) {
+//         return res.redirect('/login');
+//     }
+    
+//     try {
+//         store.destroy(sessionId, (err) => {
+//             if (err) {
+//                 console.error('Error destroying session:', err);
+//                 return res.status(500).send('Error destroying session');
+//             } else {
+//                 console.log('User logged out:', loginId);
+//                 // Destroy the current session
+//                 req.session.destroy((destroyErr) => {
+//                     if (destroyErr) {
+//                         console.error('Error destroying session:', destroyErr);
+//                         return res.status(500).send('Error destroying session');
+//                     } else {
+//                         // Redirect to the login page after logout
+//                         res.redirect('/login');
+//                     }
+//                 });
+//             }
+//         });
+//     } catch (error) {
+//         console.error('Error logging out:', error);
+//         res.status(500).send('Error logging out');
+//     }
+// };
+
+
+
 module.exports.logout = (req, res) => {
     const loginId = req.session.login;
     req.session.destroy((err) => {
